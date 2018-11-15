@@ -2,24 +2,22 @@
   <ds-card>
     <ds-space margin="small">
       <ds-table
+        v-if="blacklisted"
         :fields="['name', 'actions']"
-        :data="User">
+        :data="blacklisted">
         <template
           slot="name"
           slot-scope="{row, index, col}">
           <hc-user
             :trunc="35"
+            :show-author-popover="false"
             :post="{}"
             :user="row" />
         </template>
         <template
           slot="actions"
           slot-scope="{row, index, col}">
-          <ds-button size="small">Rechte</ds-button>
-          <ds-button size="small">Blockieren</ds-button>
-          <ds-button
-            size="small"
-            danger>Löschen</ds-button>
+          <ds-button size="small">Entblockieren</ds-button>
         </template>
       </ds-table>
     </ds-space>
@@ -34,33 +32,39 @@ export default {
   components: {
     HcUser
   },
-  data() {
-    return {
-      User: []
+  computed: {
+    blacklisted() {
+      return this.User ? this.User[0].blacklisted : []
     }
   },
   apollo: {
     User: {
       query: gql(`
-        query {
-          User(first: 10, offset: 0, orderBy: createdAt_asc) {
-            id
-            avatar
-            slug
-            name
-            contributionsCount
-            shoutedCount
-            commentsCount
-            followedByCount
-            createdAt
-            badges {
+        query User($myId: ID!) {
+          User(id: $myId) {
+            blacklisted {
               id
-              key
-              icon
+              avatar
+              slug
+              name
+              contributionsCount
+              shoutedCount
+              commentsCount
+              followedByCount
+              badges {
+                id
+                key
+                icon
+              }
             }
           }
         }
       `),
+      variables() {
+        return {
+          myId: this.$store.getters['auth/user'].id
+        }
+      },
       fetchPolicy: 'cache-and-network'
     }
   }

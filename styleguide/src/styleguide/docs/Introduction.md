@@ -1,10 +1,6 @@
-## Human Connection - Styleguide
+## CION - Vue Design System
 
 This Design System provides our team with essential components and guidelines to achieve a consistent user experience accross our applications.
-
-### Documentation
-
-If you are searching for more technical information for the UI & API, you can find it in the [HC Documentation](https://docs.human-connection.org).
 
 ### How to use it
 
@@ -24,6 +20,4 @@ Keep a few things in mind when creating a new component:
 * Use Design Tokens wherever needed
 * Document it
 
-### Recources 
 
-If you would like to become a component superhero feel free to dive into the [Vuejs Component Style Guide](https://pablohpsilva.github.io/vuejs-component-style-guide/#/).

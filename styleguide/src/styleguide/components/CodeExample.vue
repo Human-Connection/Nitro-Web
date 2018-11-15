@@ -2,6 +2,7 @@
   <div :class="`${iframe ? 'vuep-iframe' : ''}`">
     <vuep
       :template="template"
+      :options="{ theme: 'vueds' }"
       :iframe="iframe" />
   </div>
 </template>
@@ -85,6 +86,7 @@ ${code}
   border: $border-size-base solid $border-color-softer;
   padding: $space-base;
   margin-bottom: $space-small;
+  overflow: visible;
 
   .vuep-iframe & {
     padding: 0;

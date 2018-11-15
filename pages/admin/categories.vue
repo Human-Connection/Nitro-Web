@@ -3,12 +3,12 @@
     <ds-heading tag="h3">Themen / Kategorien</ds-heading>
     <ds-table
       :data="Category"
-      :fields="['icon', 'name', 'postCount']"
+      :fields="['name', 'postCount']"
       condensed>
       <template
-        slot="icon"
-        slot-scope="scope">
-        <ds-icon :name="scope.row.icon" />
+        slot="name"
+        slot-scope="{ row }">
+        <ds-icon :name="row.icon" /> {{ row.icon }}
       </template>
     </ds-table>
   </ds-card>

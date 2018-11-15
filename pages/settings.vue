@@ -36,6 +36,10 @@ export default {
           path: `/settings/invites`
         },
         {
+          name: 'Blacklist',
+          path: `/settings/blacklist`
+        },
+        {
           name: 'Data Download',
           path: `/settings/data-download`
         },

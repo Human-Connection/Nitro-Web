@@ -13,6 +13,8 @@
       icon="map-marker"
       label="Deine Stadt"
       placeholder="Deine Stadt"
+      no-options-available="in welcher Stadt lebst du?"
+      no-options-found="leider konnten wir deine Stadt nicht finden"
       @input="handleCitySelection"
       @input.native="handleCityInput" />
     <ds-input
@@ -131,7 +133,6 @@ export default {
           } */
         })
         .then(data => {
-          console.log(data)
           this.$toast.success('Updated user')
         })
         .catch(err => {
@@ -144,13 +145,8 @@ export default {
       timeout = setTimeout(() => this.requestGeoData(value), 500)
     },
     handleCitySelection(value) {
-      console.log('SET CURRENT VALUE', value)
-      const item = find(this.cities, { value: value })
-      console.log('ID:', item.id)
+      const item = find(this.cities, { value })
       this.form.locationId = item.id
-    },
-    handleCityEnter() {
-      console.log('SET CURRENT VALUE')
     },
     processCityResults(res) {
       if (

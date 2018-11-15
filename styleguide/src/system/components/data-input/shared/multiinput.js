@@ -13,11 +13,11 @@ export default {
   },
   methods: {
     selectOption(option) {
-      const newValue = option.value || option
+      const val = option.value || option
       if (this.multiple) {
-        this.selectMultiOption(newValue)
+        this.selectMultiOption(val)
       } else {
-        this.input(newValue)
+        this.input(val)
       }
     },
     selectMultiOption(value) {
@@ -39,11 +39,11 @@ export default {
       if (!this.innerValue) {
         return false
       }
-      const value = option.value || option
+      const val = option.value || option
       if (this.multiple) {
-        return this.innerValue.includes(value)
+        return this.innerValue.includes(val)
       }
-      return this.innerValue === value
+      return this.innerValue === val
     }
   }
 }
