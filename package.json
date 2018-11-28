@@ -38,7 +38,7 @@
     "accounting": "^0.4.1",
     "cross-env": "^5.2.0",
     "date-fns": "^2.0.0-alpha.24",
-    "express": "^4.16.3",
+    "express": "^4.16.4",
     "graphql-tag": "^2.10.0",
     "jsonwebtoken": "^8.3.0",
     "nuxt": "^2.0.0",
