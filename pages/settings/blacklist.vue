@@ -1,23 +1,30 @@
 <template>
+  <!-- eslint-disable vue/no-unused-vars -->
   <ds-card>
     <ds-space margin="small">
       <ds-table
         v-if="blacklisted"
         :fields="['name', 'actions']"
-        :data="blacklisted">
+        :data="blacklisted"
+      >
         <template
           slot="name"
-          slot-scope="{row, index, col}">
+          slot-scope="{row, index, col}"
+        >
           <hc-user
             :trunc="35"
             :show-author-popover="false"
             :post="{}"
-            :user="row" />
+            :user="row"
+          />
         </template>
         <template
           slot="actions"
-          slot-scope="{row, index, col}">
-          <ds-button size="small">Entblockieren</ds-button>
+          slot-scope="{row, index, col}"
+        >
+          <ds-button size="small">
+            Entblockieren
+          </ds-button>
         </template>
       </ds-table>
     </ds-space>

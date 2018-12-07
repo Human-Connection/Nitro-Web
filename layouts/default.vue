@@ -31,39 +31,27 @@
               <div
                 slot="popover"
                 style="padding-top: .5rem; padding-bottom: .5rem;"
-                @mouseover="popoverMouseEnter"
-<<<<<<< HEAD
-                @mouseleave="popoveMouseLeave">
+                @mouseleave="popoveMouseLeave"
+              >
                 Hallo <b>{{ user.name }}</b>
                 <ds-menu
                   :routes="routes"
                   :is-exact="isExact"
-                  style="margin-left: -15px; margin-right: -15px; padding-top: 1rem; padding-bottom: 1rem;">
+                  style="margin-left: -15px; margin-right: -15px; padding-top: 1rem; padding-bottom: 1rem;"
+                >
                   <ds-menu-item
                     slot="Navigation"
                     slot-scope="item"
                     :route="item.route"
                     :parents="item.parents"
-                    @click.native="toggleMenu">
+                    @click.native="toggleMenu"
+                  >
                     <ds-icon :name="item.route.icon" /> {{ item.route.name }}
                   </ds-menu-item>
                 </ds-menu>
                 <ds-space margin="xx-small" />
                 <nuxt-link :to="{ name: 'logout'}">
                   <ds-icon name="sign-out" /> Logout
-=======
-                @mouseleave="popoveMouseLeave"
-              >
-                Hallo {{ user.name }}
-                <ds-menu
-                  :routes="routes"
-                  style="margin-left: -15px; margin-right: -15px; padding-top: 1rem; padding-bottom: 1rem;"
-                  @click.native="toggleMenu"
-                />
-                <ds-space margin="xx-small" />
-                <nuxt-link :to="{ name: 'logout'}">
-                  Logout
->>>>>>> origin/locations
                 </nuxt-link>
               </div>
             </v-popover>

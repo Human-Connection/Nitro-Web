@@ -5,31 +5,39 @@
       v-model="form.name"
       icon="user"
       label="Dein Name"
-      placeholder="Dein Name"/>
+      placeholder="Dein Name"
+    />
+    <!-- eslint-disable vue/use-v-on-exact -->
     <ds-select
       id="city"
-      :options="cities"
       v-model="city"
+      :options="cities"
       icon="map-marker"
       label="Deine Stadt"
       placeholder="Deine Stadt"
       no-options-available="in welcher Stadt lebst du?"
       no-options-found="leider konnten wir deine Stadt nicht finden"
       @input="handleCitySelection"
-      @input.native="handleCityInput" />
+      @input.native="handleCityInput"
+    />
+    <!-- eslint-enable vue/use-v-on-exact -->
     <ds-input
       id="bio"
       v-model="form.about"
       type="textarea"
       rows="3"
       label="Erzähl doch ein wenig (in zwei Sätzen) über dich"
-      placeholder="Über mich"/>
+      placeholder="Über mich"
+    />
     <template slot="footer">
       <ds-button
         style="float: right;"
         icon="check"
         primary
-        @click.prevent="submit">Speichern</ds-button>
+        @click.prevent="submit"
+      >
+        Speichern
+      </ds-button>
     </template>
   </ds-card>
 </template>

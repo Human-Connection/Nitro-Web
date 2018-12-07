@@ -1,15 +1,22 @@
 <template>
   <ds-card space="small">
-    <ds-heading tag="h3">Themen / Kategorien</ds-heading>
+    <ds-heading tag="h3">
+      Themen / Kategorien
+    </ds-heading>
     <ds-table
       :data="Category"
-      :fields="['name', 'postCount']"
-      condensed>
+      :fields="['icon', 'name', 'postCount']"
+      condensed
+    >
+      <!-- eslint-disable vue/no-unused-vars -->
       <template
-        slot="name"
+        slot="icon"
+        slot-scope="scope"
+      >
         slot-scope="{ row }">
         <ds-icon :name="row.icon" /> {{ row.icon }}
       </template>
+      <!-- eslint-enable vue/no-unused-vars -->
     </ds-table>
   </ds-card>
 </template>

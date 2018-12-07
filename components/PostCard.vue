@@ -8,12 +8,15 @@
       :image="post.image"
       style="cursor: pointer; position: relative;"
     >
+      <!-- eslint-disable vue/no-v-html -->
+      <!-- TODO: replace editor content with tiptap render view -->
       <ds-space margin-bottom="large">
         <div
           class="hc-editor-content"
           v-html="excerpt"
         />
       </ds-space>
+      <!-- eslint-enable vue/no-v-html -->
       <ds-space
         margin="small"
         style="position: absolute; bottom: 44px;"
@@ -30,18 +33,21 @@
       <template slot="footer">
         <div style="display: inline-block; opacity: .5;">
           <ds-icon
-            v-tooltip="{content: category.name, placement: 'bottom-start', delay: { show: 500 }}"
             v-for="category in post.categories"
             :key="category.id"
-            :name="category.icon" />&nbsp;
+            v-tooltip="{content: category.name, placement: 'bottom-start', delay: { show: 500 }}"
+            :name="category.icon"
+          />&nbsp;
         </div>
         <div style="display: inline-block; float: right">
           <span :style="{ opacity: post.shoutedCount ? 1 : .5 }">
-            <ds-icon name="bullhorn" /> <small>{{ post.shoutedCount }}</small>
+            <ds-icon name="bullhorn" />
+            <small>{{ post.shoutedCount }}</small>
           </span>
           &nbsp;
           <span :style="{ opacity: post.commentsCount ? 1 : .5 }">
-            <ds-icon name="comments" /> <small>{{ post.commentsCount }}</small>
+            <ds-icon name="comments" />
+            <small>{{ post.commentsCount }}</small>
           </span>
         </div>
       </template>

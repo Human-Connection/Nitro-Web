@@ -35,14 +35,11 @@
       pointer-events: none;
       cursor: not-allowed;
     }
-<<<<<<< HEAD
 
     .ds-input-is-readonly & {
       pointer-events: none;
     }
-  
-=======
->>>>>>> origin/locations
+
     .ds-input-has-error & {
       border-color: $border-color-danger;
     }
@@ -83,15 +80,6 @@
     .ds-input-has-focus & {
       color: $text-color-base;
     }
-
-    .ds-input-size-small & {
-      width: $input-height-small;
-    }
-
-    .ds-input-size-large & {
-      width: $input-height-large;
-    }
-  }
 
     .ds-input-size-small & {
       width: $input-height-small;
