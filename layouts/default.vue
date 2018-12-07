@@ -4,9 +4,20 @@
       <ds-container style="padding: .5rem 3rem .2rem;">
         <a
           v-router-link
-          href="/">
+          :href="localePath({name: 'index'})">
           <ds-logo />
         </a>
+        <!-- <nuxt-link
+          v-for="locale in $i18n.locales"
+          v-if="locale.code !== $i18n.locale"
+          :key="locale.code"
+          :to="switchLocalePath(locale.code)">{{ locale.name }}</nuxt-link>
+        <nuxt-link
+          v-for="locale in $i18n.locales"
+          v-if="locale.code !== $i18n.locale"
+          :key="`${locale.code}-link`"
+          :to="switchLocalePath(locale.code)"
+          @click.prevent="switchLocale(locale.code)">{{ locale.name }}</nuxt-link> -->
         <template v-if="isLoggedIn">
           <no-ssr>
             <v-popover
@@ -17,7 +28,7 @@
               offset="10"
               style="float: right">
               <a
-                :href="$router.resolve({name: 'profile-slug', params: {slug: user.slug}}).href"
+                :href="localePath({name: 'profile-slug', params: {slug: user.slug}})"
                 @click.prevent="toggleMenu()">
                 <ds-avatar
                   :image="user.avatar"
@@ -29,12 +40,24 @@
                 style="padding-top: .5rem; padding-bottom: .5rem;"
                 @mouseover="popoverMouseEnter"
                 @mouseleave="popoveMouseLeave">
-                Hallo {{ user.name }}
+                Hallo <b>{{ user.name }}</b>
                 <ds-menu
                   :routes="routes"
-                  style="margin-left: -15px; margin-right: -15px; padding-top: 1rem; padding-bottom: 1rem;"/>
+                  :is-exact="isExact"
+                  style="margin-left: -15px; margin-right: -15px; padding-top: 1rem; padding-bottom: 1rem;">
+                  <ds-menu-item
+                    slot="Navigation"
+                    slot-scope="item"
+                    :route="item.route"
+                    :parents="item.parents"
+                    @click.native="toggleMenu">
+                    <ds-icon :name="item.route.icon" /> {{ $t(item.route.name) }}
+                  </ds-menu-item>
+                </ds-menu>
                 <ds-space margin="xx-small" />
-                <nuxt-link :to="{ name: 'logout'}">Logout</nuxt-link>
+                <nuxt-link :to="{ name: 'logout'}">
+                  <ds-icon name="sign-out" /> Logout
+                </nuxt-link>
               </div>
             </v-popover>
           </no-ssr>
@@ -74,17 +97,23 @@ export default {
       let routes = [
         {
           name: 'Mein Profil',
-          path: `/profile/${this.user.slug}`
+          path: this.localePath({
+            name: 'profile-slug',
+            params: { slug: this.user.slug }
+          }),
+          icon: 'user'
         },
         {
-          name: 'Einstellungen',
-          path: `/settings`
+          name: 'settings.name',
+          path: this.localePath('settings-slug'),
+          icon: 'cogs'
         }
       ]
       if (this.isAdmin) {
         routes.push({
-          name: 'Systemverwaltung',
-          path: `/admin`
+          name: 'admin.name',
+          path: this.localePath('admin-slug'),
+          icon: 'shield'
         })
       }
       return routes
@@ -95,8 +124,21 @@ export default {
     clearTimeout(mouseLeaveTimer)
   },
   methods: {
+    switchLocale(locale) {
+      this.$i18n.locale = locale
+      // this.$store.commit('i18n/I18N_SET_LOCALE', locale)
+      // this.$route.push(
+      //   this.localePath({
+      //     name: this.$route.name,
+      //     params: this.$route.params
+      //   })
+      // )
+    },
     toggleMenu() {
       this.isPopoverOpen = !this.isPopoverOpen
+    },
+    isExact(url) {
+      return this.$route.path.indexOf(url) === 0
     },
     popoverMouseEnter() {
       clearTimeout(mouseEnterTimer)

@@ -107,6 +107,38 @@ module.exports = {
     [
       'nuxt-sass-resources-loader',
       path.resolve(__dirname, './styleguide/src/system/styles/shared.scss')
+    ],
+    [
+      'nuxt-i18n', {
+        vueI18n: {
+          fallbackLocale: 'en'
+        },
+        locales: [
+          {
+            code: 'en',
+            iso: 'en-EN',
+            file: 'en.json',
+            name: 'English'
+          },
+          {
+            code: 'de',
+            iso: 'de-DE',
+            file: 'de.json',
+            name: 'Deutsch'
+          }
+        ],
+        strategy: 'prefix_none',
+        // pages: require('./locales/route-translations')(),
+        parsePages: false,
+        defaultLocale: 'en',
+        detectBrowserLanguage: {
+          useCookie: true,
+          cookieKey: 'i18n_redirected',
+          fallbackLocale: 'en'
+        },
+        langDir: 'locales/',
+        lazy: true
+      }
     ]
   ],
 

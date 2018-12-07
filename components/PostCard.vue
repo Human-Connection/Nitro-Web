@@ -69,10 +69,10 @@ export default {
   },
   methods: {
     href(post) {
-      return this.$router.resolve({
+      return this.localePath({
         name: 'post-slug',
         params: { slug: post.slug }
-      }).href
+      })
     }
   }
 }

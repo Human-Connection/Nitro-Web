@@ -44,6 +44,8 @@
     "jsonwebtoken": "^8.3.0",
     "nuxt": "^2.0.0",
     "nuxt-env": "^0.0.4",
+    "nuxt-i18n": "file:../nuxt-i18n",
+    "slug": "^0.9.2",
     "v-tooltip": "^2.0.0-rc.33",
     "vue-count-to": "^1.0.13",
     "vue-izitoast": "1.1.2"

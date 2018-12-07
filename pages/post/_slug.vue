@@ -5,11 +5,11 @@
         <transition
           name="slide-up"
           appear>
-          <nuxt-child />
+          <nuxt-child/>
         </transition>
       </ds-flex-item>
       <ds-flex-item :width="{ base: '200px' }">
-        <ds-menu :routes="routes" />
+        <ds-menu :routes="routes"/>
       </ds-flex-item>
     </ds-flex>
   </div>
@@ -17,12 +17,15 @@
 
 <script>
 export default {
-  data() {
-    return {
-      routes: [
+  computed: {
+    routes() {
+      return [
         {
           name: 'Post',
-          path: `/post/${this.$route.params.slug}`,
+          path: this.localePath({
+            name: 'post-slug',
+            params: { slug: this.$route.params.slug }
+          }),
           children: [
             {
               name: 'Kommentare',
@@ -40,11 +43,17 @@ export default {
         },
         {
           name: 'Mehr Info',
-          path: `/post/${this.$route.params.slug}/more-info`
+          path: this.localePath({
+            name: 'post-slug-more-info',
+            params: { slug: this.$route.params.slug }
+          })
         },
         {
           name: 'Aktiv werden',
-          path: `/post/${this.$route.params.slug}/take-action`
+          path: this.localePath({
+            name: 'post-slug-take-action',
+            params: { slug: this.$route.params.slug }
+          })
         }
       ]
     }

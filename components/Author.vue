@@ -8,7 +8,7 @@
     offset="0">
     <a
       v-router-link
-      :href="author.slug ? $router.resolve({ name: 'profile-slug', params: { slug: author.slug } }).href : null"
+      :href="author.slug ? localePath({ name: 'profile-slug', params: { slug: author.slug } }) : null"
       style="white-space: nowrap; display: flex; align-items: center;"
       @mouseover="popoverMouseEnter"
       @mouseleave="popoveMouseLeave">

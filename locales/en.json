@@ -1,0 +1,59 @@
+{
+  "settings": {
+    "name": "Settings",
+    "data": {
+      "name": "Your data"
+    },
+    "security": {
+      "name": "Security"
+    },
+    "invites": {
+      "name": "Invites"
+    },
+    "download": {
+      "name": "Download Data"
+    },
+    "delete": {
+      "name": "Delete Account"
+    },
+    "organizations": {
+      "name": "My Organizations"
+    },
+    "languages": {
+      "name": "Languages"
+    }
+  },
+  "admin": {
+    "name": "Admin",
+    "dashboard": {
+      "name": "Dashboard"
+    },
+    "organizations": {
+      "name": "Organizations"
+    },
+    "users": {
+      "name": "Users"
+    },
+    "pages": {
+      "name": "Pages"
+    },
+    "notifications": {
+      "name": "Notifications"
+    },
+    "categories": {
+      "name": "Categories"
+    },
+    "settings": {
+      "name": "Settings"
+    }
+  },
+  "post": {
+    "name": "Post",
+    "moreInfo": {
+      "name": "More info"
+    },
+    "takeAction": {
+      "name": "Take action"
+    }
+  }
+}

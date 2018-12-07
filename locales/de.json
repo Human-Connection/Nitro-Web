@@ -1,0 +1,59 @@
+{
+  "settings": {
+    "name": "Einstellungen",
+    "data": {
+      "name": "Deine Daten"
+    },
+    "security": {
+      "name": "Sicherheit"
+    },
+    "invites": {
+      "name": "Einladungen"
+    },
+    "download": {
+      "name": "Daten herunterladen"
+    },
+    "delete": {
+      "name": "Konto löschen"
+    },
+    "organizations": {
+      "name": "Meine Organisationen"
+    },
+    "languages": {
+      "name": "Sprachen"
+    }
+  },
+  "admin": {
+    "name": "Systemverwaltung",
+    "dashboard": {
+      "name": "Startzentrale"
+    },
+    "organizations": {
+      "name": "Organisationen"
+    },
+    "users": {
+      "name": "Benutzer"
+    },
+    "pages": {
+      "name": "Seiten"
+    },
+    "notifications": {
+      "name": "Benachrichtigungen"
+    },
+    "categories": {
+      "name": "Kategorien"
+    },
+    "settings": {
+      "name": "Einstellungen"
+    }
+  },
+  "post": {
+    "name": "Beitrag",
+    "moreInfo": {
+      "name": "Mehr Info"
+    },
+    "takeAction": {
+      "name": "Aktiv werde"
+    }
+  }
+}
