@@ -26,6 +26,14 @@
               {{ user.name }}
             </ds-heading>
             <ds-text
+              v-if="user.location"
+              align="center"
+              color="soft"
+              size="small"
+            >
+              <ds-icon name="map-marker" /> {{ user.location.name }}
+            </ds-text>
+            <ds-text
               align="center"
               color="soft"
               size="small"
@@ -72,6 +80,20 @@
               @update="voted = true && fetchUser()"
             />
           </ds-space>
+          <template v-if="user.about">
+            <hr>
+            <ds-space
+              margin-top="small"
+              margin-bottom="small"
+            >
+              <ds-text
+                color="soft"
+                size="small"
+              >
+                {{ user.about }}
+              </ds-text>
+            </ds-space>
+          </template>
         </ds-card>
         <ds-space />
         <ds-heading
@@ -176,14 +198,14 @@
           :width="{ base: '100%' }"
           gutter="small"
         >
-          <ds-flex-item>
+          <ds-flex-item class="profile-top-navigation">
             <ds-card class="ds-tab-nav">
               <ds-flex>
                 <ds-flex-item class="ds-tab-nav-item ds-tab-nav-item-active">
                   <ds-space margin="small">
                     <!-- TODO: find better solution for rendering errors -->
                     <no-ssr>
-                      <ds-number label="Beiträge">
+                      <ds-number :label="$t('common.post', null, user.contributionsCount)">
                         <hc-count-to
                           slot="count"
                           :end-val="user.contributionsCount"
@@ -196,7 +218,7 @@
                   <ds-space margin="small">
                     <!-- TODO: find better solution for rendering errors -->
                     <no-ssr>
-                      <ds-number label="Kommentiert">
+                      <ds-number :label="$t('profile.commented')">
                         <hc-count-to
                           slot="count"
                           :end-val="user.commentsCount"
@@ -209,7 +231,7 @@
                   <ds-space margin="small">
                     <!-- TODO: find better solution for rendering errors -->
                     <no-ssr>
-                      <ds-number label="Empfohlen">
+                      <ds-number :label="$t('profile.shouted')">
                         <hc-count-to
                           slot="count"
                           :end-val="user.shoutedCount"
@@ -221,16 +243,26 @@
               </ds-flex>
             </ds-card>
           </ds-flex-item>
-          <ds-flex-item
-            v-for="post in uniq(user.contributions.filter(post => !post.deleted))"
-            :key="post.id"
-            :width="{ base: '100%', md: '100%', xl: '50%' }"
-          >
-            <hc-post-card
-              :post="post"
-              :show-author-popover="false"
-            />
-          </ds-flex-item>
+          <template v-if="activePosts.length">
+            <ds-flex-item
+              v-for="post in activePosts"
+              :key="post.id"
+              :width="{ base: '100%', md: '100%', xl: '50%' }"
+            >
+              <hc-post-card
+                :post="post"
+                :show-author-popover="false"
+              />
+            </ds-flex-item>
+          </template>
+          <template v-else>
+            <ds-flex-item :width="{ base: '100%' }">
+              <hc-empty
+                margin="xx-large"
+                icon="file"
+              />
+            </ds-flex-item>
+          </template>
         </ds-flex>
         <hc-load-more
           v-if="hasMore"
@@ -251,6 +283,7 @@ import HcFollowButton from '~/components/FollowButton.vue'
 import HcCountTo from '~/components/CountTo.vue'
 import HcBadges from '~/components/Badges.vue'
 import HcLoadMore from '~/components/LoadMore.vue'
+import HcEmpty from '~/components/Empty.vue'
 
 export default {
   components: {
@@ -259,7 +292,8 @@ export default {
     HcFollowButton,
     HcCountTo,
     HcBadges,
-    HcLoadMore
+    HcLoadMore,
+    HcEmpty
   },
   transition: {
     name: 'slide-up',
@@ -296,6 +330,12 @@ export default {
         this.user.contributions &&
         this.user.contributions.length < this.user.contributionsCount
       )
+    },
+    activePosts() {
+      if (!this.user.contributions) {
+        return []
+      }
+      return this.uniq(this.user.contributions.filter(post => !post.deleted))
     }
   },
   watch: {
@@ -338,7 +378,9 @@ export default {
   },
   apollo: {
     User: {
-      query: require('~/graphql/UserProfileQuery.js').default,
+      query() {
+        return require('~/graphql/UserProfileQuery.js').default(this)
+      },
       variables() {
         return {
           slug: this.$route.params.slug,
@@ -358,6 +400,12 @@ export default {
   margin: auto;
   margin-top: -60px;
   border: #fff 5px solid;
+}
+
+.profile-top-navigation {
+  position: sticky;
+  top: 53px;
+  z-index: 2;
 }
 
 .ds-tab-nav {

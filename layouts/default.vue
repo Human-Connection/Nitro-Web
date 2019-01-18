@@ -1,19 +1,21 @@
 <template>
   <div class="layout-default">
     <div class="main-navigation">
-      <ds-container style="padding: .5rem 3rem .2rem;">
-        <a
-          v-router-link
-          href="/"
-        >
-          <ds-logo />
-        </a>
-        <div style="float: right">
+      <ds-container style="padding: .5rem 2rem .2rem; display: flex;">
+        <div class="main-navigation-left">
+          <a
+            v-router-link
+            href="/"
+          >
+            <ds-logo />
+          </a>
+        </div>
+        <div class="main-navigation-right">
           <no-ssr>
             <locale-switch
               class="topbar-locale-switch"
               placement="bottom"
-              offset="24"
+              offset="12"
             />
           </no-ssr>
           <template v-if="isLoggedIn">
@@ -26,37 +28,54 @@
                   <a
                     class="avatar-menu-trigger"
                     :href="$router.resolve({name: 'profile-slug', params: {slug: user.slug}}).href"
-                    @click.prevent="toggleMenu()"
+                    @click.prevent="toggleMenu"
                   >
                     <ds-avatar
                       :image="user.avatar"
                       :name="user.name"
                       size="42"
                     />
+                    <ds-icon
+                      size="xx-small"
+                      name="angle-down"
+                    />
                   </a>
                 </template>
                 <template
                   slot="popover"
-                  slot-scope="{toggleMenu}"
+                  slot-scope="{closeMenu}"
                 >
                   <div class="avatar-menu-popover">
                     {{ $t('login.hello') }} <b>{{ user.name }}</b>
+                    <template v-if="user.role !== 'user'">
+                      <ds-text
+                        color="softer"
+                        size="small"
+                        style="margin-bottom: 0"
+                      >
+                        {{ user.role | camelCase }}
+                      </ds-text>
+                    </template>
+                    <hr>
                     <ds-menu
                       :routes="routes"
-                      :is-exact="isExact"
+                      :matcher="matcher"
                     >
                       <ds-menu-item
-                        slot="Navigation"
+                        slot="menuitem"
                         slot-scope="item"
                         :route="item.route"
                         :parents="item.parents"
-                        @click.native="toggleMenu"
+                        @click.native="closeMenu(false)"
                       >
                         <ds-icon :name="item.route.icon" /> {{ item.route.name }}
                       </ds-menu-item>
                     </ds-menu>
-                    <ds-space margin="xx-small" />
-                    <nuxt-link :to="{ name: 'logout'}">
+                    <hr>
+                    <nuxt-link
+                      class="logout-link"
+                      :to="{ name: 'logout'}"
+                    >
                       <ds-icon name="sign-out" /> {{ $t('login.logout') }}
                     </nuxt-link>
                   </div>
@@ -72,6 +91,7 @@
         <nuxt />
       </div>
     </ds-container>
+    <div id="overlay" />
   </div>
 </template>
 
@@ -120,7 +140,11 @@ export default {
     }
   },
   methods: {
-    isExact(url) {
+    matcher(url, route) {
+      if (url.indexOf('/profile') === 0) {
+        // do only match own profile
+        return this.$route.path === url
+      }
       return this.$route.path.indexOf(url) === 0
     }
   }
@@ -129,28 +153,59 @@ export default {
 
 <style lang="scss">
 .topbar-locale-switch {
-  display: inline-block;
-  top: 8px;
-  right: 10px;
-  position: relative;
+  display: flex;
+  margin-right: $space-xx-small;
 }
-.avatar-menu {
-  float: right;
+
+.main-navigation {
+  a {
+    color: $text-color-soft;
+  }
+}
+
+.main-navigation-left {
+  display: flex;
+  margin-right: auto;
+}
+.main-navigation-right {
+  display: flex;
+  margin-left: auto;
 }
 
 .avatar-menu-trigger {
   user-select: none;
+  display: flex;
+  align-items: center;
+  padding-left: $space-xx-small;
 }
 .avatar-menu-popover {
   display: inline-block;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 
+  hr {
+    color: $color-neutral-90;
+    background-color: $color-neutral-90;
+  }
+
+  .logout-link {
+    margin-left: -$space-small;
+    margin-right: -$space-small;
+    margin-bottom: -$space-xx-small;
+    padding: $space-xx-small $space-small;
+  }
+
   nav {
-    margin-left: -15px;
-    margin-right: -15px;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    margin-left: -$space-small;
+    margin-right: -$space-small;
+    margin-top: -$space-xx-small;
+    margin-bottom: -$space-xx-small;
+    // padding-top: $space-xx-small;
+    // padding-bottom: $space-xx-small;
+
+    a {
+      padding-left: 12px;
+    }
   }
 }
 </style>

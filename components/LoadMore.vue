@@ -4,12 +4,12 @@
     style="text-align: center"
   >
     <ds-button
-      :icon="loading ? 'spinner' : 'arrow-down'"
-      :disabled="loading"
+      :loading="loading"
+      icon="arrow-down"
       ghost
       @click="$emit('click')"
     >
-      mehr laden
+      {{ $t('actions.loadMore') }}
     </ds-button>
   </ds-space>
 </template>

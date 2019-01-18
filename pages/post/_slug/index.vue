@@ -53,16 +53,15 @@
     </template>
     <ds-space margin="small" />
     <!-- Comments -->
-    <ds-section
-      slot="footer"
-    >
+    <ds-section slot="footer">
       <h3 style="margin-top: 0;">
         <span>
           <ds-icon name="comments" />
           <ds-tag
             v-if="post.commentsCount"
-            style="transform: scale(.8); margin-top: -4px; margin-left: -12px; position: absolute;"
+            style="margin-top: -4px; margin-left: -12px; position: absolute;"
             color="primary"
+            size="small"
             round
           >
             {{ post.commentsCount }}
@@ -101,11 +100,10 @@
         </div>
         <ds-space margin-bottom="small" />
       </div>
-      <div v-else>
-        <p style="text-align: center; opacity: .5;">
-          NO COMMENTS
-        </p>
-      </div>
+      <hc-empty
+        v-else
+        icon="messages"
+      />
     </ds-section>
   </ds-card>
 </template>
@@ -114,6 +112,7 @@
 import gql from 'graphql-tag'
 import HcAuthor from '~/components/Author.vue'
 import HcShoutButton from '~/components/ShoutButton.vue'
+import HcEmpty from '~/components/Empty.vue'
 
 export default {
   transition: {
@@ -122,7 +121,8 @@ export default {
   },
   components: {
     HcAuthor,
-    HcShoutButton
+    HcShoutButton,
+    HcEmpty
   },
   head() {
     return {
@@ -143,39 +143,16 @@ export default {
   },
   apollo: {
     Post: {
-      query: gql(`
-        query Post($slug: String!) {
-          Post(slug: $slug) {
-            id
-            title
-            content
-            createdAt
-            slug
-            image
-            author {
+      query() {
+        return gql(`
+          query Post($slug: String!) {
+            Post(slug: $slug) {
               id
-              slug
-              name
-              avatar
-              shoutedCount
-              contributionsCount
-              commentsCount
-              followedByCount
-              badges {
-                id
-                key
-                icon
-              }
-            }
-            tags {
-              name
-            }
-            commentsCount
-            comments(orderBy: createdAt_desc) {
-              id
-              contentExcerpt
+              title
+              content
               createdAt
-              deleted
+              slug
+              image
               author {
                 id
                 slug
@@ -185,22 +162,53 @@ export default {
                 contributionsCount
                 commentsCount
                 followedByCount
+                location {
+                    name: name${this.$i18n.locale().toUpperCase()}
+                  }
                 badges {
                   id
                   key
                   icon
                 }
               }
+              tags {
+                name
+              }
+              commentsCount
+              comments(orderBy: createdAt_desc) {
+                id
+                contentExcerpt
+                createdAt
+                deleted
+                author {
+                  id
+                  slug
+                  name
+                  avatar
+                  shoutedCount
+                  contributionsCount
+                  commentsCount
+                  followedByCount
+                  location {
+                    name: name${this.$i18n.locale().toUpperCase()}
+                  }
+                  badges {
+                    id
+                    key
+                    icon
+                  }
+                }
+              }
+              categories {
+                id
+                name
+                icon
+              }
+              shoutedCount
             }
-            categories {
-              id
-              name
-              icon
-            }
-            shoutedCount
           }
-        }
-      `),
+        `)
+      },
       variables() {
         return {
           slug: this.$route.params.slug
@@ -234,11 +242,7 @@ export default {
     }
   }
   .ds-card-footer {
-    padding: 0;
-
-    .ds-section {
-      padding: $space-base;
-    }
+    padding-bottom: 0;
   }
 }
 </style>
