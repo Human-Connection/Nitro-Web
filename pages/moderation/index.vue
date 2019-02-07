@@ -20,25 +20,47 @@
           <ds-text
             size="small"
             color="soft"
+            style="display: inline"
           >
-            {{ scope.row.contribution.author.name }}
+            {{ scope.row.contribution.author.name || 'Anonymus' | truncate(26) }}
+          </ds-text>
+          <ds-text
+            size="small"
+            color="softer"
+            style="display: inline"
+          >
+            @{{ scope.row.contribution.author.slug | truncate(26) }}
           </ds-text>
         </div>
         <div v-else-if="scope.row.type === 'comment'">
           <nuxt-link :to="{ name: 'post-slug', params: { slug: scope.row.comment.post.slug } }">
-            <b>{{ scope.row.comment.contentExcerpt | truncate(50) }}</b>
+            <b>{{ scope.row.comment.contentExcerpt | planeText | truncate(50) }}</b>
           </nuxt-link><br>
           <ds-text
             size="small"
             color="soft"
+            style="display: inline"
           >
-            {{ scope.row.comment.author.name }}
+            {{ scope.row.comment.author.name || 'Anonymus' | truncate(26) }}
+          </ds-text>
+          <ds-text
+            size="small"
+            color="softer"
+            style="display: inline"
+          >
+            @{{ scope.row.comment.author.slug | truncate(26) }}
           </ds-text>
         </div>
         <div v-else>
           <nuxt-link :to="{ name: 'profile-slug', params: { slug: scope.row.user.slug } }">
-            <b>{{ scope.row.user.name | truncate(50) }}</b>
+            <b>{{ scope.row.user.name || 'Anonymus' | truncate(26) }}</b>
           </nuxt-link>
+          <ds-text
+            size="small"
+            color="softer"
+          >
+            @{{ scope.row.user.slug | truncate(26) }}
+          </ds-text>
         </div>
       </template>
       <template
@@ -70,8 +92,14 @@
         slot-scope="scope"
       >
         <nuxt-link :to="{ name: 'profile-slug', params: { slug: scope.row.reporter.slug } }">
-          {{ scope.row.reporter.name }}
+          {{ scope.row.reporter.name || 'Anonymus' | truncate(26) }}
         </nuxt-link>
+        <ds-text
+          size="small"
+          color="softer"
+        >
+          @{{ scope.row.reporter.slug | truncate(26) }}
+        </ds-text>
       </template>
     </ds-table>
     <hc-empty
