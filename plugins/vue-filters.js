@@ -5,6 +5,7 @@ import format from 'date-fns/format'
 import formatRelative from 'date-fns/formatRelative'
 import addSeconds from 'date-fns/addSeconds'
 import accounting from 'accounting'
+import truncate from 'lodash/truncate'
 
 export default ({ app }) => {
   const locales = {
@@ -62,17 +63,10 @@ export default ({ app }) => {
         : '00:00:00'
     },
     truncate: (value = '', length = -1) => {
-      if (!value || typeof value !== 'string' || value.length <= 0) {
-        return ''
-      }
-      if (length <= 0) {
-        return value
-      }
-      let output = value.substring(0, length)
-      if (output.length < value.length) {
-        output += '…'
-      }
-      return output
+      return truncate(value, {
+        length: length,
+        omission: '…'
+      })
     },
     list: (value, glue = ', ', truncate = 0) => {
       if (!Array.isArray(value) || !value.length) {
@@ -94,6 +88,12 @@ export default ({ app }) => {
           return index === 0 ? letter.toUpperCase() : letter.toLowerCase()
         })
         .replace(/\s+/g, '')
+    },
+    planeText: (value = '') => {
+      return value
+        .replace(/(<br ?\/?>\s*){2,}/gim, '')
+        .replace(/<[a-z-]+.*>(.+)<\/[a-z-]+>/gim, '$1 ')
+        .trim()
     }
   })
 
