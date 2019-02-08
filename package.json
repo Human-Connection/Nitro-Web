@@ -66,7 +66,7 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-preset-env": "^1.7.0",
-    "cypress-cucumber-preprocessor": "^1.9.1",
+    "cypress-cucumber-preprocessor": "^1.10.0",
     "eslint": "^5.13.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-loader": "^2.0.0",
