@@ -174,7 +174,7 @@ export default {
   },
   props: {
     /**
-     * The placeholder shown when value is empty
+     * The placeholder shown when value is empty.
      */
     placeholder: {
       type: String,
@@ -195,7 +195,7 @@ export default {
       default: null
     },
     /**
-     * The name of the input's right icon
+     * The name of the input's right icon.
      */
     iconRight: {
       type: String,
