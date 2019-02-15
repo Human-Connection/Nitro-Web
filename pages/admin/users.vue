@@ -1,10 +1,13 @@
 <template>
   <!-- eslint-disable vue/no-unused-vars -->
-  <ds-card>
+  <ds-card :header="$t('admin.users.name')">
     <ds-space margin="small">
       <ds-table
-        :fields="['name', 'actions']"
-        :data="User"
+        :fields="{
+          name: 'Name',
+          actions: { label: '', align: 'right' }
+        }"
+        :data="users"
       >
         <template
           slot="name"
@@ -46,9 +49,9 @@ export default {
   components: {
     HcUser
   },
-  data() {
-    return {
-      User: []
+  computed: {
+    users() {
+      return this.User ? this.User : []
     }
   },
   apollo: {

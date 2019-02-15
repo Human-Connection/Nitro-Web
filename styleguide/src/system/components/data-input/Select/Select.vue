@@ -50,12 +50,11 @@
             class="ds-select-search"
             autocomplete="off"
             :id="id"
-            :name="model"
+            :name="name ? name : model"
             :autofocus="autofocus"
             :placeholder="placeholder"
             :tabindex="tabindex"
             :disabled="disabled"
-            :readonly="readonly"
             v-model="searchString"
             @focus="openAndFocus"
             @keydown.tab="closeAndBlur"
@@ -87,12 +86,11 @@
           class="ds-select-search"
           autocomplete="off"
           :id="id"
-          :name="model"
+          :name="name ? name : model"
           :autofocus="autofocus"
           :placeholder="placeholder"
           :tabindex="tabindex"
           :disabled="disabled"
-          :readonly="readonly"
           v-model="searchString"
           @focus="openAndFocus"
           @keydown.tab="closeAndBlur"
@@ -190,7 +188,7 @@ export default {
       default: false
     },
     /**
-     * The name of the input's icon
+     * The name of the input's icon.
      */
     icon: {
       type: String,

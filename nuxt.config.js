@@ -1,5 +1,5 @@
 const pkg = require('./package')
-const envWhitelist = ['NODE_ENV', 'MAINTENANCE']
+const envWhitelist = ['NODE_ENV', 'MAINTENANCE', 'MAPBOX_TOKEN']
 const dev = process.env.NODE_ENV !== 'production'
 const path = require('path')
 
@@ -8,6 +8,8 @@ module.exports = {
 
   dev: dev,
   debug: dev ? 'nuxt:*,app' : null,
+
+  modern: 'server',
 
   transition: {
     name: 'slide-up',
@@ -26,7 +28,9 @@ module.exports = {
       'pages-slug'
     ],
     // pages to keep alive
-    keepAlivePages: ['index']
+    keepAlivePages: ['index'],
+    // active locales
+    locales: require('./locales')
   },
   /*
   ** Headers of the page
@@ -59,6 +63,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '~/plugins/i18n.js', ssr: true },
+    { src: '~/plugins/axios.js', ssr: false },
     { src: '~/plugins/keep-alive.js', ssr: false },
     { src: '~/plugins/design-system.js', ssr: true },
     { src: '~/plugins/vue-directives.js', ssr: false },
@@ -69,32 +75,12 @@ module.exports = {
 
   router: {
     middleware: ['authenticated'],
-    linkActiveClass: 'router-active-link'
+    linkActiveClass: 'router-link-active',
+    linkExactActiveClass: 'router-link-exact-active',
+    scrollBehavior: () => {
+      return { x: 0, y: 0 }
+    }
   },
-  /* router: {
-    routes: [
-      {
-        name: 'index',
-        path: '/',
-        component: 'pages/index.vue'
-      },
-      {
-        name: 'post-slug',
-        path: '/post/:slug',
-        component: 'pages/post/_slug.vue',
-        children: [
-          {
-            path: 'more-info',
-            component: 'pages/post/_slug.vue'
-          },
-          {
-            path: 'take-action',
-            component: 'pages/post/_slug.vue'
-          }
-        ]
-      }
-    ]
-  }, */
 
   /*
   ** Nuxt.js modules
@@ -102,13 +88,16 @@ module.exports = {
   modules: [
     ['@nuxtjs/dotenv', { only: envWhitelist }],
     ['nuxt-env', { keys: envWhitelist }],
+    'cookie-universal-nuxt',
     '@nuxtjs/apollo',
     '@nuxtjs/axios',
-    [
-      'nuxt-sass-resources-loader',
-      path.resolve(__dirname, './styleguide/src/system/styles/shared.scss')
-    ]
+    '@nuxtjs/style-resources',
+    'portal-vue/nuxt'
   ],
+
+  styleResources: {
+    scss: ['~/styleguide/src/system/styles/shared.scss']
+  },
 
   /*
   ** Axios module configuration
@@ -171,11 +160,6 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    /*
-     * Polyfill missing ES6 & 7 Methods to work on older Browser
-     */
-    vendor: ['@babel/polyfill'],
-
     /*
     ** You can extend webpack config here
     */

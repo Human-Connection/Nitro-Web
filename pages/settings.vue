@@ -1,13 +1,16 @@
 <template>
   <div>
     <ds-heading tag="h1">
-      Settings
+      {{ $t('settings.name') }}
     </ds-heading>
     <ds-flex gutter="small">
-      <ds-flex-item :width="{ base: '200px' }">
-        <ds-menu :routes="routes" />
+      <ds-flex-item :width="{ base: '100%', md: '200px' }">
+        <ds-menu
+          :routes="routes"
+          :is-exact="() => true"
+        />
       </ds-flex-item>
-      <ds-flex-item>
+      <ds-flex-item :width="{ base: '100%', md: 1 }">
         <transition
           name="slide-up"
           appear
@@ -21,40 +24,40 @@
 
 <script>
 export default {
-  data() {
-    return {
-      routes: [
+  computed: {
+    routes() {
+      return [
         {
-          name: 'Your Data',
+          name: this.$t('settings.data.name'),
           path: `/settings`
         },
         {
-          name: 'Password',
-          path: `/settings/password`
+          name: this.$t('settings.security.name'),
+          path: `/settings/security`
         },
         {
-          name: 'Invites',
+          name: this.$t('settings.invites.name'),
           path: `/settings/invites`
         },
         {
-          name: 'Blacklist',
+          name: this.$t('settings.blacklist.name'),
           path: `/settings/blacklist`
         },
         {
-          name: 'Data Download',
+          name: this.$t('settings.download.name'),
           path: `/settings/data-download`
         },
         {
-          name: 'Delete Account',
+          name: this.$t('settings.delete.name'),
           path: `/settings/delete-account`
         },
         {
-          name: 'My Organizations',
+          name: this.$t('settings.organizations.name'),
           path: `/settings/my-organizations`
         },
         {
-          name: 'Settings',
-          path: `/settings/settings`
+          name: this.$t('settings.languages.name'),
+          path: `/settings/languages`
         }
       ]
     }

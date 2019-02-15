@@ -13,11 +13,6 @@ export const mutations = {
   SET_USER(state, user) {
     state.user = user || null
   },
-  SET_USER_SETTINGS(state, userSettings) {
-    // state.user = Object.assign(state.user, {
-    //   userSettings: Object.assign(this.getters['auth/userSettings'], userSettings)
-    // })
-  },
   SET_TOKEN(state, token) {
     state.token = token || null
   },
@@ -27,22 +22,22 @@ export const mutations = {
 }
 
 export const getters = {
+  isAuthenticated(state) {
+    return !!state.token
+  },
   isLoggedIn(state) {
     return !!(state.user && state.token)
   },
   pending(state) {
     return !!state.pending
   },
-  isVerified(state) {
-    return !!state.user && state.user.isVerified && !!state.user.name
-  },
   isAdmin(state) {
-    return !!state.user && state.user.role === 'ADMIN'
+    return !!state.user && state.user.role === 'admin'
   },
   isModerator(state) {
     return (
       !!state.user &&
-      (state.user.role === 'ADMIN' || state.user.role === 'MODERATOR')
+      (state.user.role === 'admin' || state.user.role === 'moderator')
     )
   },
   user(state) {
@@ -51,25 +46,11 @@ export const getters = {
   token(state) {
     return state.token
   }
-  // userSettings(state, getters, rootState, rootGetters) {
-  // const userSettings = (state.user && state.user.userSettings) ? state.user.userSettings : {}
-  //
-  // const defaultLanguage = (state.user && state.user.language) ? state.user.language : rootGetters['i18n/locale']
-  // let contentLanguages = !isEmpty(userSettings.contentLanguages) ? userSettings.contentLanguages : []
-  // if (isEmpty(contentLanguages)) {
-  //   contentLanguages = userSettings.uiLanguage ? [userSettings.uiLanguage] : [defaultLanguage]
-  // }
-  //
-  // return Object.assign({
-  //   uiLanguage: defaultLanguage,
-  //   contentLanguages: contentLanguages
-  // }, userSettings)
-  // }
 }
 
 export const actions = {
-  async init({ commit }) {
-    if (process.client) {
+  async init({ commit, dispatch }) {
+    if (!process.server) {
       return
     }
     const token = this.app.$apolloHelpers.getToken()
@@ -77,20 +58,15 @@ export const actions = {
       return
     }
 
-    const user = await jwt.verify(token, 'b/&&7b78BF&fv/Vd')
-    if (user.id) {
-      commit('SET_USER', {
-        id: user.id,
-        name: user.name,
-        slug: user.slug,
-        email: user.email,
-        avatar: user.avatar,
-        role: user.role,
-        locationId: user.locationId,
-        about: user.about
-      })
-      commit('SET_TOKEN', token)
+    const payload = await jwt.verify(token, process.env.JWT_SECRET)
+    if (!payload.id) {
+      return
     }
+    commit('SET_TOKEN', token)
+    commit('SET_USER', {
+      id: payload.id
+    })
+    await dispatch('fetchCurrentUser')
   },
   async check({ commit, dispatch, getters }) {
     if (!this.app.$apolloHelpers.getToken()) {
@@ -98,63 +74,66 @@ export const actions = {
     }
     return getters.isLoggedIn
   },
-  refresh({ state, commit }, { id, name, locationId, about, avatar }) {
-    if (!state.user.id || id !== state.user.id) {
-      return
-    }
-    commit('SET_USER', {
-      id: state.user.id, // do not change
-      name: name || state.user.name,
-      slug: state.user.slug, // do not change
-      email: state.user.email, // do not change
-      avatar: avatar || state.user.avatar,
-      role: state.user.role,
-      locationId: locationId || state.user.locationId,
-      about: about || state.user.about
-    })
-  },
-  async login({ commit }, { email, password }) {
-    try {
-      commit('SET_PENDING', true)
-      commit('SET_USER', null)
-      commit('SET_TOKEN', null)
-      const res = await this.app.apolloProvider.defaultClient
-        .mutate({
-          mutation: gql(`
-          mutation($email: String!, $password: String!) {
-            login(email: $email, password: $password) {
+  async fetchCurrentUser({ commit, getters }) {
+    await this.app.apolloProvider.defaultClient
+      .query({
+        query: gql(`
+          query User($id: ID!) {
+            User(id: $id) {
               id
               name
               slug
               email
               avatar
               role
-              locationId
+              locationName
               about
-              token
             }
           }
         `),
+        variables: { id: getters.user.id }
+      })
+      .then(({ data }) => {
+        const user = data.User.pop()
+        if (user.id && user.email) {
+          commit('SET_USER', user)
+        }
+      })
+    return getters.user
+  },
+  async login({ commit }, { email, password }) {
+    commit('SET_PENDING', true)
+    try {
+      const res = await this.app.apolloProvider.defaultClient
+        .mutate({
+          mutation: gql(`
+            mutation($email: String!, $password: String!) {
+              login(email: $email, password: $password) {
+                id
+                name
+                slug
+                email
+                avatar
+                role
+                locationName
+                about
+                token
+              }
+            }
+          `),
           variables: { email, password }
         })
         .then(({ data }) => data && data.login)
 
-      if (res && res.token) {
-        await this.app.$apolloHelpers.onLogin(res.token)
-        commit('SET_TOKEN', res.token)
-        delete res.token
-        commit('SET_USER', res)
-        commit('SET_PENDING', false)
-        return true
-      } else {
-        commit('SET_PENDING', false)
-        throw new Error('THERE IS AN ERROR')
-      }
+      await this.app.$apolloHelpers.onLogin(res.token)
+      commit('SET_TOKEN', res.token)
+      const userData = Object.assign({}, res)
+      delete userData.token
+      commit('SET_USER', userData)
     } catch (err) {
-      commit('SET_USER', null)
-      commit('SET_TOKEN', null)
-      commit('SET_PENDING', false)
       throw new Error(err)
+    } finally {
+      commit('SET_PENDING', false)
     }
   },
   async logout({ commit }) {

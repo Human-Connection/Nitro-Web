@@ -1,13 +1,16 @@
 <template>
   <div>
     <ds-heading tag="h1">
-      Administartion
+      {{ $t('admin.name') }}
     </ds-heading>
     <ds-flex gutter="small">
-      <ds-flex-item :width="{ base: '200px' }">
-        <ds-menu :routes="routes" />
+      <ds-flex-item :width="{ base: '100%', md: '200px' }">
+        <ds-menu
+          :routes="routes"
+          :is-exact="() => true"
+        />
       </ds-flex-item>
-      <ds-flex-item>
+      <ds-flex-item :width="{ base: '100%', md: 1 }">
         <transition
           name="slide-up"
           appear
@@ -21,39 +24,40 @@
 
 <script>
 export default {
-  data() {
-    return {
-      routes: [
+  middleware: ['isAdmin'],
+  computed: {
+    routes() {
+      return [
         {
-          name: 'Dashboard',
+          name: this.$t('admin.dashboard.name'),
           path: `/admin`
         },
         {
-          name: 'Users',
+          name: this.$t('admin.users.name'),
           path: `/admin/users`
         },
         {
-          name: 'Organizations',
+          name: this.$t('admin.organizations.name'),
           path: `/admin/organizations`
         },
         {
-          name: 'Pages',
+          name: this.$t('admin.pages.name'),
           path: `/admin/pages`
         },
         {
-          name: 'Notifications',
+          name: this.$t('admin.notifications.name'),
           path: `/admin/notifications`
         },
         {
-          name: 'Categories',
+          name: this.$t('admin.categories.name'),
           path: `/admin/categories`
         },
         {
-          name: 'Tags',
+          name: this.$t('admin.tags.name'),
           path: `/admin/tags`
         },
         {
-          name: 'Settings',
+          name: this.$t('admin.settings.name'),
           path: `/admin/settings`
         }
       ]

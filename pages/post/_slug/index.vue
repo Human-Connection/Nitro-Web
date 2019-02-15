@@ -6,6 +6,14 @@
     class="post-card"
   >
     <hc-author :post="post" />
+    <no-ssr>
+      <content-menu
+        placement="bottom-end"
+        context="contribution"
+        :item-id="post.id"
+        :name="post.title"
+      />
+    </no-ssr>
     <ds-space margin-bottom="small" />
     <!-- Content -->
     <!-- eslint-disable vue/no-v-html -->
@@ -34,7 +42,10 @@
     <!--<div class="tags">
       <ds-icon name="compass" /> <ds-tag
         v-for="category in post.categories"
-        :key="category.id"><ds-icon :name="category.icon" /> {{ category.name }}</ds-tag>
+        :key="category.id"
+      >
+        {{ category.name }}
+      </ds-tag>
     </div>-->
     <!-- Tags -->
     <template v-if="post.tags && post.tags.length">
@@ -50,16 +61,15 @@
     </template>
     <ds-space margin="small" />
     <!-- Comments -->
-    <ds-section
-      slot="footer"
-    >
+    <ds-section slot="footer">
       <h3 style="margin-top: 0;">
         <span>
           <ds-icon name="comments" />
           <ds-tag
             v-if="post.commentsCount"
-            style="transform: scale(.8); margin-top: -4px; margin-left: -12px; position: absolute;"
+            style="margin-top: -4px; margin-left: -12px; position: absolute;"
             color="primary"
+            size="small"
             round
           >
             {{ post.commentsCount }}
@@ -80,6 +90,15 @@
           <ds-space margin-bottom="x-small">
             <hc-author :post="comment" />
           </ds-space>
+          <no-ssr>
+            <content-menu
+              placement="bottom-end"
+              context="comment"
+              style="float-right"
+              :item-id="comment.id"
+              :name="comment.author.name"
+            />
+          </no-ssr>
           <!-- eslint-disable vue/no-v-html -->
           <!-- TODO: replace editor content with tiptap render view -->
           <div
@@ -98,19 +117,20 @@
         </div>
         <ds-space margin-bottom="small" />
       </div>
-      <div v-else>
-        <p style="text-align: center; opacity: .5;">
-          NO COMMENTS
-        </p>
-      </div>
+      <hc-empty
+        v-else
+        icon="messages"
+      />
     </ds-section>
   </ds-card>
 </template>
 
 <script>
 import gql from 'graphql-tag'
+import ContentMenu from '~/components/ContentMenu'
 import HcAuthor from '~/components/Author.vue'
 import HcShoutButton from '~/components/ShoutButton.vue'
+import HcEmpty from '~/components/Empty.vue'
 
 export default {
   transition: {
@@ -119,7 +139,9 @@ export default {
   },
   components: {
     HcAuthor,
-    HcShoutButton
+    HcShoutButton,
+    HcEmpty,
+    ContentMenu
   },
   head() {
     return {
@@ -140,39 +162,16 @@ export default {
   },
   apollo: {
     Post: {
-      query: gql(`
-        query Post($slug: String!) {
-          Post(slug: $slug) {
-            id
-            title
-            content
-            createdAt
-            slug
-            image
-            author {
+      query() {
+        return gql(`
+          query Post($slug: String!) {
+            Post(slug: $slug) {
               id
-              slug
-              name
-              avatar
-              shoutedCount
-              contributionsCount
-              commentsCount
-              followedByCount
-              badges {
-                id
-                key
-                icon
-              }
-            }
-            tags {
-              name
-            }
-            commentsCount
-            comments(orderBy: createdAt_desc) {
-              id
-              contentExcerpt
+              title
+              content
               createdAt
-              deleted
+              slug
+              image
               author {
                 id
                 slug
@@ -182,22 +181,53 @@ export default {
                 contributionsCount
                 commentsCount
                 followedByCount
+                location {
+                    name: name${this.$i18n.locale().toUpperCase()}
+                  }
                 badges {
                   id
                   key
                   icon
                 }
               }
+              tags {
+                name
+              }
+              commentsCount
+              comments(orderBy: createdAt_desc) {
+                id
+                contentExcerpt
+                createdAt
+                deleted
+                author {
+                  id
+                  slug
+                  name
+                  avatar
+                  shoutedCount
+                  contributionsCount
+                  commentsCount
+                  followedByCount
+                  location {
+                    name: name${this.$i18n.locale().toUpperCase()}
+                  }
+                  badges {
+                    id
+                    key
+                    icon
+                  }
+                }
+              }
+              categories {
+                id
+                name
+                icon
+              }
+              shoutedCount
             }
-            categories {
-              id
-              name
-              icon
-            }
-            shoutedCount
           }
-        }
-      `),
+        `)
+      },
       variables() {
         return {
           slug: this.$route.params.slug
@@ -210,31 +240,40 @@ export default {
 </script>
 
 <style lang="scss">
-.post-card {
-  // max-width: 800px;
-  margin: auto;
+.page-name-post-slug {
+  .content-menu {
+    float: right;
+    margin-right: -$space-x-small;
+    margin-top: -$space-large;
+  }
 
-  .comments {
-    margin-top: $space-small;
+  .post-card {
+    // max-width: 800px;
+    margin: auto;
 
-    .comment {
+    .comments {
       margin-top: $space-small;
-      position: relative;
-    }
-  }
 
-  .ds-card-image {
-    img {
-      max-height: 300px;
-      object-fit: cover;
-      object-position: center;
+      .comment {
+        margin-top: $space-small;
+        position: relative;
+      }
     }
-  }
-  .ds-card-footer {
-    padding: 0;
 
-    .ds-section {
-      padding: $space-base;
+    .ds-card-image {
+      img {
+        max-height: 300px;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+
+    .ds-card-footer {
+      padding: 0;
+
+      .ds-section {
+        padding: $space-base;
+      }
     }
   }
 }

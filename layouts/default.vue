@@ -1,62 +1,89 @@
 <template>
   <div class="layout-default">
     <div class="main-navigation">
-      <ds-container style="padding: .5rem 3rem .2rem;">
-        <a
-          v-router-link
-          href="/"
-        >
-          <ds-logo />
-        </a>
-        <template v-if="isLoggedIn">
+      <ds-container style="padding: .5rem 2rem .2rem; display: flex;">
+        <div class="main-navigation-left">
+          <a
+            v-router-link
+            href="/"
+          >
+            <ds-logo />
+          </a>
+        </div>
+        <div class="main-navigation-right">
           <no-ssr>
-            <v-popover
-              :open.sync="isPopoverOpen"
-              :open-group="Math.random().toString()"
-              placement="bottom-end"
-              trigger="manual"
-              offset="10"
-              style="float: right"
-            >
-              <a
-                :href="$router.resolve({name: 'profile-slug', params: {slug: user.slug}}).href"
-                @click.prevent="toggleMenu()"
-              >
-                <ds-avatar
-                  :image="user.avatar"
-                  :name="user.name"
-                  size="42"
-                />
-              </a>
-              <div
-                slot="popover"
-                style="padding-top: .5rem; padding-bottom: .5rem;"
-                @mouseleave="popoveMouseLeave"
-              >
-                Hallo <b>{{ user.name }}</b>
-                <ds-menu
-                  :routes="routes"
-                  :is-exact="isExact"
-                  style="margin-left: -15px; margin-right: -15px; padding-top: 1rem; padding-bottom: 1rem;"
-                >
-                  <ds-menu-item
-                    slot="Navigation"
-                    slot-scope="item"
-                    :route="item.route"
-                    :parents="item.parents"
-                    @click.native="toggleMenu"
-                  >
-                    <ds-icon :name="item.route.icon" /> {{ item.route.name }}
-                  </ds-menu-item>
-                </ds-menu>
-                <ds-space margin="xx-small" />
-                <nuxt-link :to="{ name: 'logout'}">
-                  <ds-icon name="sign-out" /> Logout
-                </nuxt-link>
-              </div>
-            </v-popover>
+            <locale-switch
+              class="topbar-locale-switch"
+              placement="bottom"
+              offset="12"
+            />
           </no-ssr>
-        </template>
+          <template v-if="isLoggedIn">
+            <no-ssr>
+              <dropdown class="avatar-menu">
+                <template
+                  slot="default"
+                  slot-scope="{toggleMenu}"
+                >
+                  <a
+                    class="avatar-menu-trigger"
+                    :href="$router.resolve({name: 'profile-slug', params: {slug: user.slug}}).href"
+                    @click.prevent="toggleMenu"
+                  >
+                    <ds-avatar
+                      :image="user.avatar"
+                      :name="user.name"
+                      size="42"
+                    />
+                    <ds-icon
+                      size="xx-small"
+                      name="angle-down"
+                    />
+                  </a>
+                </template>
+                <template
+                  slot="popover"
+                  slot-scope="{closeMenu}"
+                >
+                  <div class="avatar-menu-popover">
+                    {{ $t('login.hello') }} <b>{{ user.name }}</b>
+                    <template v-if="user.role !== 'user'">
+                      <ds-text
+                        color="softer"
+                        size="small"
+                        style="margin-bottom: 0"
+                      >
+                        {{ user.role | camelCase }}
+                      </ds-text>
+                    </template>
+                    <hr>
+                    <ds-menu
+                      :routes="routes"
+                      :matcher="matcher"
+                    >
+                      <ds-menu-item
+                        slot="menuitem"
+                        slot-scope="item"
+                        :route="item.route"
+                        :parents="item.parents"
+                        @click.native="closeMenu(false)"
+                      >
+                        <ds-icon :name="item.route.icon" /> {{ item.route.name }}
+                      </ds-menu-item>
+                    </ds-menu>
+                    <hr>
+                    <nuxt-link
+                      class="logout-link"
+                      :to="{ name: 'logout'}"
+                    >
+                      <ds-icon name="sign-out" /> {{ $t('login.logout') }}
+                    </nuxt-link>
+                  </div>
+                </template>
+              </dropdown>
+            </no-ssr>
+          </template>
+        </div>
       </ds-container>
     </div>
     <ds-container>
@@ -64,26 +91,36 @@
         <nuxt />
       </div>
     </ds-container>
+    <div id="overlay" />
+    <no-ssr>
+      <portal-target name="modal" />
+    </no-ssr>
+    <no-ssr>
+      <report-modal />
+    </no-ssr>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { setTimeout } from 'timers'
-let mouseEnterTimer = null
-let mouseLeaveTimer = null
+import LocaleSwitch from '~/components/LocaleSwitch'
+import Dropdown from '~/components/Dropdown'
+import ReportModal from '~/components/ReportModal'
+import seo from '~/components/mixins/seo'
 
 export default {
-  data() {
-    return {
-      isPopoverOpen: false
-    }
+  components: {
+    Dropdown,
+    ReportModal,
+    LocaleSwitch
   },
+  mixins: [seo],
   computed: {
     ...mapGetters({
       user: 'auth/user',
       isLoggedIn: 'auth/isLoggedIn',
-      isAdmin: 'auth/isLoggedIn'
+      isModerator: 'auth/isModerator',
+      isAdmin: 'auth/isAdmin'
     }),
     routes() {
       if (!this.user.slug) {
@@ -91,19 +128,26 @@ export default {
       }
       let routes = [
         {
-          name: 'Mein Profil',
+          name: this.$t('profile.name'),
           path: `/profile/${this.user.slug}`,
           icon: 'user'
         },
         {
-          name: 'Einstellungen',
+          name: this.$t('settings.name'),
           path: `/settings`,
           icon: 'cogs'
         }
       ]
+      if (this.isModerator) {
+        routes.push({
+          name: this.$t('moderation.name'),
+          path: `/moderation`,
+          icon: 'balance-scale'
+        })
+      }
       if (this.isAdmin) {
         routes.push({
-          name: 'Systemverwaltung',
+          name: this.$t('admin.name'),
           path: `/admin`,
           icon: 'shield'
         })
@@ -111,35 +155,80 @@ export default {
       return routes
     }
   },
-  beforeDestroy() {
-    clearTimeout(mouseEnterTimer)
-    clearTimeout(mouseLeaveTimer)
-  },
   methods: {
-    toggleMenu() {
-      this.isPopoverOpen = !this.isPopoverOpen
-    },
-    isExact(url) {
+    matcher(url, route) {
+      if (url.indexOf('/profile') === 0) {
+        // do only match own profile
+        return this.$route.path === url
+      }
       return this.$route.path.indexOf(url) === 0
-    },
-    popoverMouseEnter() {
-      clearTimeout(mouseEnterTimer)
-      clearTimeout(mouseLeaveTimer)
-      if (!this.isPopoverOpen) {
-        mouseEnterTimer = setTimeout(() => {
-          this.isPopoverOpen = true
-        }, 500)
-      }
-    },
-    popoveMouseLeave() {
-      clearTimeout(mouseEnterTimer)
-      clearTimeout(mouseLeaveTimer)
-      if (this.isPopoverOpen) {
-        mouseLeaveTimer = setTimeout(() => {
-          this.isPopoverOpen = false
-        }, 300)
-      }
     }
   }
 }
 </script>
+
+<style lang="scss">
+.topbar-locale-switch {
+  display: flex;
+  margin-right: $space-xx-small;
+}
+
+.main-navigation {
+  a {
+    color: $text-color-soft;
+  }
+}
+
+.main-navigation-left {
+  display: flex;
+  margin-right: auto;
+}
+.main-navigation-right {
+  display: flex;
+  margin-left: auto;
+}
+
+.avatar-menu-trigger {
+  user-select: none;
+  display: flex;
+  align-items: center;
+  padding-left: $space-xx-small;
+}
+
+.avatar-menu-popover {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  hr {
+    color: $color-neutral-90;
+    background-color: $color-neutral-90;
+  }
+
+  .logout-link {
+    margin-left: -$space-small;
+    margin-right: -$space-small;
+    margin-top: -$space-xxx-small;
+    margin-bottom: -$space-x-small;
+    padding: $space-x-small $space-small;
+    // subtract menu border with from padding
+    padding-left: $space-small - 2;
+
+    color: $text-color-base;
+
+    &:hover {
+      color: $text-color-link-active;
+    }
+  }
+
+  nav {
+    margin-left: -$space-small;
+    margin-right: -$space-small;
+    margin-top: -$space-xx-small;
+    margin-bottom: -$space-xx-small;
+
+    a {
+      padding-left: 12px;
+    }
+  }
+}
+</style>

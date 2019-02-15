@@ -1,45 +1,48 @@
 <template>
-  <ds-card space="small">
-    <ds-input
-      id="name"
-      v-model="form.name"
-      icon="user"
-      label="Dein Name"
-      placeholder="Dein Name"
-    />
-    <!-- eslint-disable vue/use-v-on-exact -->
-    <ds-select
-      id="city"
-      v-model="city"
-      :options="cities"
-      icon="map-marker"
-      label="Deine Stadt"
-      placeholder="Deine Stadt"
-      no-options-available="in welcher Stadt lebst du?"
-      no-options-found="leider konnten wir deine Stadt nicht finden"
-      @input="handleCitySelection"
-      @input.native="handleCityInput"
-    />
-    <!-- eslint-enable vue/use-v-on-exact -->
-    <ds-input
-      id="bio"
-      v-model="form.about"
-      type="textarea"
-      rows="3"
-      label="Erzähl doch ein wenig (in zwei Sätzen) über dich"
-      placeholder="Über mich"
-    />
-    <template slot="footer">
-      <ds-button
-        style="float: right;"
-        icon="check"
-        primary
-        @click.prevent="submit"
-      >
-        Speichern
-      </ds-button>
-    </template>
-  </ds-card>
+  <ds-form
+    v-model="form"
+    @submit="submit"
+  >
+    <ds-card :header="$t('settings.data.name')">
+      <ds-input
+        id="name"
+        model="name"
+        icon="user"
+        :label="$t('settings.data.labelName')"
+        :placeholder="$t('settings.data.labelName')"
+      />
+      <!-- eslint-disable vue/use-v-on-exact -->
+      <ds-select
+        id="city"
+        model="locationName"
+        icon="map-marker"
+        :options="cities"
+        :label="$t('settings.data.labelCity')"
+        :placeholder="$t('settings.data.labelCity')"
+        @input.native="handleCityInput"
+      />
+      <!-- eslint-enable vue/use-v-on-exact -->
+      <ds-input
+        id="bio"
+        model="about"
+        type="textarea"
+        rows="3"
+        :label="$t('settings.data.labelBio')"
+        :placeholder="$t('settings.data.labelBio')"
+      />
+      <template slot="footer">
+        <ds-button
+          style="float: right;"
+          icon="check"
+          type="submit"
+          :loading="sending"
+          primary
+        >
+          {{ $t('actions.save') }}
+        </ds-button>
+      </template>
+    </ds-card>
+  </ds-form>
 </template>
 
 <script>
@@ -50,18 +53,17 @@ import { CancelToken } from 'axios'
 import find from 'lodash/find'
 
 let timeout
-const mapboxToken =
-  'pk.eyJ1IjoiaHVtYW4tY29ubmVjdGlvbiIsImEiOiJjajl0cnBubGoweTVlM3VwZ2lzNTNud3ZtIn0.KZ8KK9l70omjXbEkkbHGsQ'
+const mapboxToken = process.env.MAPBOX_TOKEN
 
 export default {
   data() {
     return {
       axiosSource: null,
       cities: [],
-      city: null,
+      sending: false,
       form: {
         name: null,
-        locationId: null,
+        locationName: null,
         about: null
       }
     }
@@ -77,7 +79,7 @@ export default {
       handler: function(user) {
         this.form = {
           name: user.name,
-          locationId: user.locationId,
+          locationName: user.locationName,
           about: user.about
         }
       }
@@ -85,25 +87,25 @@ export default {
   },
   methods: {
     submit() {
-      console.log('SUBMIT', { ...this.form })
+      this.sending = true
       this.$apollo
         .mutate({
           mutation: gql`
             mutation(
               $id: ID!
               $name: String
-              $locationId: String
+              $locationName: String
               $about: String
             ) {
               UpdateUser(
                 id: $id
                 name: $name
-                locationId: $locationId
+                locationName: $locationName
                 about: $about
               ) {
                 id
                 name
-                locationId
+                locationName
                 about
               }
             }
@@ -112,14 +114,16 @@ export default {
           variables: {
             id: this.user.id,
             name: this.form.name,
-            locationId: this.form.locationId,
+            locationName: this.form.locationName
+              ? this.form.locationName['label'] || this.form.locationName
+              : null,
             about: this.form.about
           },
           // Update the cache with the result
           // The query will be updated with the optimistic response
           // and then with the real result of the mutation
           update: (store, { data: { UpdateUser } }) => {
-            this.$store.dispatch('auth/refresh', UpdateUser)
+            this.$store.dispatch('auth/fetchCurrentUser')
 
             // Read the data from our cache for this query.
             // const data = store.readQuery({ query: TAGS_QUERY })
@@ -144,17 +148,15 @@ export default {
           this.$toast.success('Updated user')
         })
         .catch(err => {
-          console.error(err)
           this.$toast.error(err.message)
+        })
+        .finally(() => {
+          this.sending = false
         })
     },
     handleCityInput(value) {
       clearTimeout(timeout)
       timeout = setTimeout(() => this.requestGeoData(value), 500)
-    },
-    handleCitySelection(value) {
-      const item = find(this.cities, { value })
-      this.form.locationId = item.id
     },
     processCityResults(res) {
       if (
@@ -190,9 +192,12 @@ export default {
 
       this.axiosSource = CancelToken.source()
 
+      const place = encodeURIComponent(value)
+      const lang = this.$i18n.locale()
+
       this.$axios
         .get(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${value}.json?access_token=${mapboxToken}&types=region,postcode,district,place,country&language=de`,
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${place}.json?access_token=${mapboxToken}&types=region,place,country&language=${lang}`,
           {
             cancelToken: this.axiosSource.token
           }
@@ -200,7 +205,6 @@ export default {
         .then(res => {
           this.cities = this.processCityResults(res)
         })
-      console.log('TRY TO GET DATA FOR ', value)
     }
   }
 }

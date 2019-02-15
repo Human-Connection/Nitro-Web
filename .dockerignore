@@ -6,5 +6,13 @@ npm-debug.log
 
 Dockerfile
 docker-compose*.yml
+scripts/
 
 .env
+
+cypress/
+
+README.md
+screenshot*.png
+lokalise.png
+.editorconfig

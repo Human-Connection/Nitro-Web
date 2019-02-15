@@ -1,19 +1,15 @@
 <template>
-  <ds-card space="small">
-    <ds-heading tag="h3">
-      Themen / Kategorien
-    </ds-heading>
+  <ds-card :header="$t('admin.categories.name')">
     <ds-table
       :data="Category"
-      :fields="['icon', 'name', 'postCount']"
+      :fields="fields"
       condensed
     >
       <!-- eslint-disable vue/no-unused-vars -->
       <template
         slot="icon"
-        slot-scope="scope"
+        slot-scope="{ row }"
       >
-        slot-scope="{ row }">
         <ds-icon :name="row.icon" /> {{ row.icon }}
       </template>
       <!-- eslint-enable vue/no-unused-vars -->
@@ -28,6 +24,18 @@ export default {
   data() {
     return {
       Category: []
+    }
+  },
+  computed: {
+    fields() {
+      return {
+        icon: ' ',
+        name: this.$t('admin.categories.categoryName'),
+        postCount: {
+          label: this.$t('admin.categories.postCount'),
+          align: 'right'
+        }
+      }
     }
   },
   apollo: {

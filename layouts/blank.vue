@@ -5,5 +5,14 @@
         <nuxt />
       </div>
     </ds-container>
+    <div id="overlay" />
   </div>
 </template>
+
+<script>
+import seo from '~/components/mixins/seo'
+
+export default {
+  mixins: [seo]
+}
+</script>

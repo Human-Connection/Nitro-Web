@@ -43,12 +43,12 @@
           <hc-post-card :post="relatedPost" />
         </ds-flex-item>
       </ds-flex>
-      <ds-space
+      <hc-empty
         v-else
-        style="text-align: center; padding-top: 2em; opacity: .6;"
-      >
-        No related Posts
-      </ds-space>
+        margin="large"
+        icon="file"
+        message="No related Posts"
+      />
     </ds-section>
     <ds-space margin-bottom="large" />
   </ds-card>
@@ -57,6 +57,7 @@
 <script>
 import gql from 'graphql-tag'
 import HcPostCard from '~/components/PostCard.vue'
+import HcEmpty from '~/components/Empty.vue'
 
 export default {
   transition: {
@@ -64,7 +65,8 @@ export default {
     mode: 'out-in'
   },
   components: {
-    HcPostCard
+    HcPostCard,
+    HcEmpty
   },
   computed: {
     post() {
@@ -73,51 +75,56 @@ export default {
   },
   apollo: {
     Post: {
-      query: gql(`
-        query Post($slug: String!) {
-          Post(slug: $slug) {
-            id
-            title
-            tags {
-              id
-              name
-            }
-            categories {
-              id
-              name
-              icon
-            }
-            relatedContributions(first: 2) {
+      query() {
+        return gql(`
+          query Post($slug: String!) {
+            Post(slug: $slug) {
               id
               title
-              slug
-              contentExcerpt
-              shoutedCount
-              commentsCount
+              tags {
+                id
+                name
+              }
               categories {
                 id
                 name
                 icon
               }
-              author {
+              relatedContributions(first: 2) {
                 id
-                name
+                title
                 slug
-                avatar
-                contributionsCount
-                followedByCount
+                contentExcerpt
+                shoutedCount
                 commentsCount
-                badges {
+                categories {
                   id
-                  key
+                  name
                   icon
                 }
+                author {
+                  id
+                  name
+                  slug
+                  avatar
+                  contributionsCount
+                  followedByCount
+                  commentsCount
+                  location {
+                    name: name${this.$i18n.locale().toUpperCase()}
+                  }
+                  badges {
+                    id
+                    key
+                    icon
+                  }
+                }
               }
+              shoutedCount
             }
-            shoutedCount
           }
-        }
-      `),
+        `)
+      },
       variables() {
         return {
           slug: this.$route.params.slug

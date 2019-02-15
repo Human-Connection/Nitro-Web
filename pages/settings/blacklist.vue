@@ -1,10 +1,13 @@
 <template>
   <!-- eslint-disable vue/no-unused-vars -->
-  <ds-card>
+  <ds-card :header="$t('settings.blacklist.name')">
     <ds-space margin="small">
       <ds-table
         v-if="blacklisted"
-        :fields="['name', 'actions']"
+        :fields="{
+          name: 'Name',
+          actions: { label: '', align: 'right' }
+        }"
         :data="blacklisted"
       >
         <template
@@ -23,7 +26,7 @@
           slot-scope="{row, index, col}"
         >
           <ds-button size="small">
-            Entblockieren
+            {{ $t('settings.blacklist.unblock') }}
           </ds-button>
         </template>
       </ds-table>

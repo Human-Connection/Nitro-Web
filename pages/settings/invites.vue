@@ -1,7 +1,18 @@
 <template>
-  <ds-card>
-    <ds-space margin="small">
-      Invites...
-    </ds-space>
+  <ds-card :header="$t('settings.invites.name')">
+    <hc-empty
+      icon="tasks"
+      message="Coming Soon…"
+    />
   </ds-card>
 </template>
+
+<script>
+import HcEmpty from '~/components/Empty.vue'
+
+export default {
+  components: {
+    HcEmpty
+  }
+}
+</script>

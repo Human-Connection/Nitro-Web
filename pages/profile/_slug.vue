@@ -17,6 +17,14 @@
             class="profile-avatar"
             size="120px"
           />
+          <no-ssr>
+            <content-menu
+              placement="bottom-end"
+              context="user"
+              :item-id="user.id"
+              :name="user.name"
+            />
+          </no-ssr>
           <ds-space margin="small">
             <ds-heading
               tag="h3"
@@ -26,19 +34,19 @@
               {{ user.name }}
             </ds-heading>
             <ds-text
-              v-if="user.location && user.location.length"
+              v-if="user.location"
               align="center"
               color="soft"
               size="small"
             >
-              <ds-icon name="map-marker" /> {{ user.location[0].name }}
+              <ds-icon name="map-marker" /> {{ user.location.name }}
             </ds-text>
             <ds-text
               align="center"
               color="soft"
               size="small"
             >
-              Mitglied seit {{ user.createdAt | date('MMMM yyyy') }}
+              {{ $t('profile.memberSince') }} {{ user.createdAt | date('MMMM yyyy') }}
             </ds-text>
           </ds-space>
           <ds-space
@@ -52,7 +60,7 @@
           <ds-flex>
             <ds-flex-item>
               <no-ssr>
-                <ds-number label="Folgen">
+                <ds-number :label="$t('profile.following')">
                   <hc-count-to
                     slot="count"
                     :end-val="followedByCount"
@@ -62,7 +70,7 @@
             </ds-flex-item>
             <ds-flex-item>
               <no-ssr>
-                <ds-number label="Folgt">
+                <ds-number :label="$t('profile.followers')">
                   <hc-count-to
                     slot="count"
                     :end-val="Number(user.followingCount) || 0"
@@ -205,7 +213,7 @@
                   <ds-space margin="small">
                     <!-- TODO: find better solution for rendering errors -->
                     <no-ssr>
-                      <ds-number label="Beiträge">
+                      <ds-number :label="$t('common.post', null, user.contributionsCount)">
                         <hc-count-to
                           slot="count"
                           :end-val="user.contributionsCount"
@@ -218,7 +226,7 @@
                   <ds-space margin="small">
                     <!-- TODO: find better solution for rendering errors -->
                     <no-ssr>
-                      <ds-number label="Kommentiert">
+                      <ds-number :label="$t('profile.commented')">
                         <hc-count-to
                           slot="count"
                           :end-val="user.commentsCount"
@@ -231,7 +239,7 @@
                   <ds-space margin="small">
                     <!-- TODO: find better solution for rendering errors -->
                     <no-ssr>
-                      <ds-number label="Empfohlen">
+                      <ds-number :label="$t('profile.shouted')">
                         <hc-count-to
                           slot="count"
                           :end-val="user.shoutedCount"
@@ -243,16 +251,26 @@
               </ds-flex>
             </ds-card>
           </ds-flex-item>
-          <ds-flex-item
-            v-for="post in uniq(user.contributions.filter(post => !post.deleted))"
-            :key="post.id"
-            :width="{ base: '100%', md: '100%', xl: '50%' }"
-          >
-            <hc-post-card
-              :post="post"
-              :show-author-popover="false"
-            />
-          </ds-flex-item>
+          <template v-if="activePosts.length">
+            <ds-flex-item
+              v-for="post in activePosts"
+              :key="post.id"
+              :width="{ base: '100%', md: '100%', xl: '50%' }"
+            >
+              <hc-post-card
+                :post="post"
+                :show-author-popover="false"
+              />
+            </ds-flex-item>
+          </template>
+          <template v-else>
+            <ds-flex-item :width="{ base: '100%' }">
+              <hc-empty
+                margin="xx-large"
+                icon="file"
+              />
+            </ds-flex-item>
+          </template>
         </ds-flex>
         <hc-load-more
           v-if="hasMore"
@@ -273,6 +291,8 @@ import HcFollowButton from '~/components/FollowButton.vue'
 import HcCountTo from '~/components/CountTo.vue'
 import HcBadges from '~/components/Badges.vue'
 import HcLoadMore from '~/components/LoadMore.vue'
+import HcEmpty from '~/components/Empty.vue'
+import ContentMenu from '~/components/ContentMenu'
 
 export default {
   components: {
@@ -281,7 +301,9 @@ export default {
     HcFollowButton,
     HcCountTo,
     HcBadges,
-    HcLoadMore
+    HcLoadMore,
+    HcEmpty,
+    ContentMenu
   },
   transition: {
     name: 'slide-up',
@@ -318,6 +340,12 @@ export default {
         this.user.contributions &&
         this.user.contributions.length < this.user.contributionsCount
       )
+    },
+    activePosts() {
+      if (!this.user.contributions) {
+        return []
+      }
+      return this.uniq(this.user.contributions.filter(post => !post.deleted))
     }
   },
   watch: {
@@ -360,7 +388,9 @@ export default {
   },
   apollo: {
     User: {
-      query: require('~/graphql/UserProfileQuery.js').default,
+      query() {
+        return require('~/graphql/UserProfileQuery.js').default(this)
+      },
       variables() {
         return {
           slug: this.$route.params.slug,
@@ -382,10 +412,18 @@ export default {
   border: #fff 5px solid;
 }
 
+.page-name-profile-slug {
+  .ds-flex-item:first-child .content-menu {
+    position: absolute;
+    top: $space-x-small;
+    right: $space-x-small;
+  }
+}
+
 .profile-top-navigation {
   position: sticky;
   top: 53px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .ds-tab-nav {
@@ -396,10 +434,10 @@ export default {
       &.ds-tab-nav-item-active {
         border-bottom: 3px solid #17b53f;
         &:first-child {
-          border-bottom-left-radius: $border-radius-large;
+          border-bottom-left-radius: $border-radius-x-large;
         }
         &:last-child {
-          border-bottom-right-radius: $border-radius-large;
+          border-bottom-right-radius: $border-radius-x-large;
         }
       }
     }

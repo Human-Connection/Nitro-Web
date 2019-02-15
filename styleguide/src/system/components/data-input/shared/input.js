@@ -31,6 +31,13 @@ export default {
       default: null
     },
     /**
+     * Name to use on the input for accessibility
+     */
+    name: {
+      type: String,
+      default: null
+    },
+    /**
      * The label of the input.
      */
     label: {
@@ -60,6 +67,7 @@ export default {
     },
     /**
      * The async-validator schema used for the input.
+     * @default null
      */
     schema: {
       type: Object,
@@ -67,7 +75,7 @@ export default {
     },
     /**
      * The input's size.
-     * `small, base, large`
+     * @options small|base|large
      */
     size: {
       type: String,

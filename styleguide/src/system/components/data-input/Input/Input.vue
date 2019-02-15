@@ -13,7 +13,7 @@
           iconRight && `ds-input-has-icon-right`
         ]"
         :id="id"
-        :name="model"
+        :name="name ? name : model"
         :type="type"
         :autofocus="autofocus"
         :placeholder="placeholder"
@@ -48,7 +48,8 @@ export default {
   mixins: [inputMixin],
   props: {
     /**
-     * The type of this input `url, text, password, email, search, textarea`.
+     * The type of this input.
+     * @options url|text|password|email|search|textarea
      */
     type: {
       type: String,
@@ -61,13 +62,6 @@ export default {
      * The placeholder shown when value is empty.
      */
     placeholder: {
-      type: String,
-      default: null
-    },
-    /**
-     * The name of the field for better accessibility
-     */
-    name: {
       type: String,
       default: null
     },

@@ -6,7 +6,7 @@
       :label="$parentInput.label" 
       :for="$parentInput.id" />
     <slot/>
-    <ds-input-error :error="$parentInput ? $parentInput.error : null" />
+    <ds-input-error :error="$parentInput.error" />
   </div>
 </template>
 
