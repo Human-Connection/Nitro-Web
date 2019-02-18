@@ -9,6 +9,8 @@ module.exports = {
   dev: dev,
   debug: dev ? 'nuxt:*,app' : null,
 
+  modern: 'server',
+
   transition: {
     name: 'slide-up',
     mode: 'out-in'
@@ -73,7 +75,11 @@ module.exports = {
 
   router: {
     middleware: ['authenticated'],
-    linkActiveClass: 'router-active-link'
+    linkActiveClass: 'router-link-active',
+    linkExactActiveClass: 'router-link-exact-active',
+    scrollBehavior: () => {
+      return { x: 0, y: 0 }
+    }
   },
 
   /*
@@ -85,11 +91,13 @@ module.exports = {
     'cookie-universal-nuxt',
     '@nuxtjs/apollo',
     '@nuxtjs/axios',
-    [
-      'nuxt-sass-resources-loader',
-      path.resolve(__dirname, './styleguide/src/system/styles/shared.scss')
-    ]
+    '@nuxtjs/style-resources',
+    'portal-vue/nuxt'
   ],
+
+  styleResources: {
+    scss: ['~/styleguide/src/system/styles/shared.scss']
+  },
 
   /*
   ** Axios module configuration
@@ -152,12 +160,6 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    /*
-     * TODO: import the polyfill instead of using the deprecated vendor key
-     * Polyfill missing ES6 & 7 Methods to work on older Browser
-     */
-    vendor: ['@babel/polyfill'],
-
     /*
     ** You can extend webpack config here
     */
