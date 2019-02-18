@@ -34,7 +34,7 @@
         </div>
         <div v-else-if="scope.row.type === 'comment'">
           <nuxt-link :to="{ name: 'post-slug', params: { slug: scope.row.comment.post.slug } }">
-            <b>{{ scope.row.comment.contentExcerpt | planeText | truncate(50) }}</b>
+            <b>{{ scope.row.comment.contentExcerpt | plainText | truncate(50) }}</b>
           </nuxt-link><br>
           <ds-text
             size="small"
