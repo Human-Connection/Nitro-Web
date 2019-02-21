@@ -11,94 +11,94 @@
     >
       <template
         slot="name"
-        slot-scope="scope"
+        slot-scope="{ row }"
       >
-        <div v-if="scope.row.type === 'contribution'">
-          <nuxt-link :to="{ name: 'post-slug', params: { slug: scope.row.contribution.slug } }">
-            <b>{{ scope.row.contribution.title | truncate(50) }}</b>
+        <div v-if="row.type === 'contribution'">
+          <nuxt-link :to="{ name: 'post-slug', params: { slug: row.contribution.slug } }">
+            <b>{{ row.contribution.title | truncate(50) }}</b>
           </nuxt-link><br>
           <ds-text
             size="small"
             color="soft"
             style="display: inline"
           >
-            {{ scope.row.contribution.author.name || 'Anonymus' | truncate(26) }}
+            {{ row.contribution.author.name || 'Anonymus' | truncate(26) }}
           </ds-text>
           <ds-text
             size="small"
             color="softer"
             style="display: inline"
           >
-            @{{ scope.row.contribution.author.slug | truncate(26) }}
+            @{{ row.contribution.author.slug | truncate(26) }}
           </ds-text>
         </div>
-        <div v-else-if="scope.row.type === 'comment'">
-          <nuxt-link :to="{ name: 'post-slug', params: { slug: scope.row.comment.post.slug } }">
-            <b>{{ scope.row.comment.contentExcerpt | plainText | truncate(50) }}</b>
+        <div v-else-if="row.type === 'comment'">
+          <nuxt-link :to="{ name: 'post-slug', params: { slug: row.comment.post.slug } }">
+            <b>{{ row.comment.contentExcerpt | plainText | truncate(50) }}</b>
           </nuxt-link><br>
           <ds-text
             size="small"
             color="soft"
             style="display: inline"
           >
-            {{ scope.row.comment.author.name || 'Anonymus' | truncate(26) }}
+            {{ row.comment.author.name || 'Anonymus' | truncate(26) }}
           </ds-text>
           <ds-text
             size="small"
             color="softer"
             style="display: inline"
           >
-            @{{ scope.row.comment.author.slug | truncate(26) }}
+            @{{ row.comment.author.slug | truncate(26) }}
           </ds-text>
         </div>
         <div v-else>
-          <nuxt-link :to="{ name: 'profile-slug', params: { slug: scope.row.user.slug } }">
-            <b>{{ scope.row.user.name || 'Anonymus' | truncate(26) }}</b>
+          <nuxt-link :to="{ name: 'profile-slug', params: { slug: row.user.slug } }">
+            <b>{{ row.user.name || 'Anonymus' | truncate(26) }}</b>
           </nuxt-link>
           <ds-text
             size="small"
             color="softer"
           >
-            @{{ scope.row.user.slug | truncate(26) }}
+            @{{ row.user.slug | truncate(26) }}
           </ds-text>
         </div>
       </template>
       <template
         slot="type"
-        slot-scope="scope"
+        slot-scope="{ row }"
       >
         <ds-text
           color="soft"
         >
           <ds-icon
-            v-if="scope.row.type === 'contribution'"
-            v-tooltip="{ content: $t(`report.${scope.row.type}.type`), placement: 'right' }"
+            v-if="row.type === 'contribution'"
+            v-tooltip="{ content: $t(`report.${row.type}.type`), placement: 'right' }"
             name="bookmark"
           />
           <ds-icon
-            v-else-if="scope.row.type === 'comment'"
-            v-tooltip="{ content: $t(`report.${scope.row.type}.type`), placement: 'right' }"
+            v-else-if="row.type === 'comment'"
+            v-tooltip="{ content: $t(`report.${row.type}.type`), placement: 'right' }"
             name="comments"
           />
           <ds-icon
             v-else
-            v-tooltip="{ content: $t(`report.${scope.row.type}.type`), placement: 'right' }"
+            v-tooltip="{ content: $t(`report.${row.type}.type`), placement: 'right' }"
             name="user"
           />
         </ds-text>
       </template>
       <template
         slot="reporter"
-        slot-scope="scope"
+        slot-scope="{ row }"
       >
-        <nuxt-link :to="{ name: 'profile-slug', params: { slug: scope.row.reporter.slug } }">
-          {{ scope.row.reporter.name || 'Anonymus' | truncate(26) }}
+        <nuxt-link :to="{ name: 'profile-slug', params: { slug: row.reporter.slug } }">
+          {{ row.reporter.name || 'Anonymus' | truncate(26) }}
         </nuxt-link>
         <ds-text
           size="small"
           color="softer"
         >
-          @{{ scope.row.reporter.slug | truncate(26) }}
+          @{{ row.reporter.slug | truncate(26) }}
         </ds-text>
       </template>
     </ds-table>
