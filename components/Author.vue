@@ -153,7 +153,7 @@ export default {
   },
   props: {
     post: { type: Object, default: null },
-    trunc: { type: Number, default: null },
+    trunc: { type: Number, default: -1 },
     showAuthorPopover: { type: Boolean, default: true }
   },
   data() {
