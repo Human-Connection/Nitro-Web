@@ -62,7 +62,10 @@ export default ({ app }) => {
         ? format(addSeconds(new Date('2000-01-01 00:00'), value), 'HH:mm:ss')
         : '00:00:00'
     },
-    truncate: (value = '', length = -1) => {
+    truncate: (value = '', length = null) => {
+      if (!length || length <= 0) {
+        return value
+      }
       return truncate(value, {
         length: length,
         omission: '…'
