@@ -63,6 +63,9 @@
     "webpack-bundle-analyzer": "~3.0.4",
     "webpack-merge-and-include-globally": "~2.1.14"
   },
+  "resolve": {
+    "babel-plugin-transform-vue-jsx": "@vue/babel-preset-jsx"
+  },
   "author": "visualjerk",
   "main": "./dist/system.umd.min.js",
   "files": [
