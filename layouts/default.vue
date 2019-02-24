@@ -46,7 +46,7 @@
                   slot-scope="{closeMenu}"
                 >
                   <div class="avatar-menu-popover">
-                    {{ $t('login.hello') }} <b>{{ user.name }}</b>
+                    {{ $t('login.hello') }} <b>{{ user.name || 'Anonymus' | truncate(26) }}</b>
                     <template v-if="user.role !== 'user'">
                       <ds-text
                         color="softer"

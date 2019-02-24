@@ -7,6 +7,7 @@ export default app => {
       User(slug: $slug) {
         id
         name
+        slug
         avatar
         about
         locationName
@@ -78,6 +79,7 @@ export default app => {
             id
             avatar
             name
+            slug
             location {
               name: name${lang}
             }

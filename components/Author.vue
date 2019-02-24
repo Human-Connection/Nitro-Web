@@ -18,7 +18,7 @@
         <div style="display: inline-block; float: left; margin-right: 4px;  height: 100%; vertical-align: middle;">
           <ds-avatar
             :image="author.avatar"
-            :name="author.name"
+            :name="author.name || 'Anonymus'"
             style="display: inline-block; vertical-align: middle;"
             size="32px"
           />
@@ -26,17 +26,34 @@
         <div style="display: inline-block; height: 100%; vertical-align: middle;">
           <b
             class="username"
-            style="vertical-align: middle;"
+            style="vertical-align: middle"
           >
-            {{ author.name | truncate(trunc, 18) }}
+            {{ author.name || 'Anonymus' | truncate(26) }}
           </b>
           <template v-if="post.createdAt">
+            <ds-text
+              size="small"
+              color="softer"
+              tag="span"
+              style="vertical-align: middle; display: inline"
+            >
+              @{{ author.slug | truncate(26) }}
+            </ds-text>
             <br>
             <ds-text
               size="small"
               color="soft"
             >
               {{ post.createdAt | dateTime('dd. MMMM yyyy HH:mm') }}
+            </ds-text>
+          </template>
+          <template v-else>
+            <br>
+            <ds-text
+              size="small"
+              color="softer"
+            >
+              @{{ author.slug | truncate(trunc) }}
             </ds-text>
           </template>
         </div>
@@ -136,7 +153,7 @@ export default {
   },
   props: {
     post: { type: Object, default: null },
-    trunc: { type: Number, default: null },
+    trunc: { type: Number, default: -1 },
     showAuthorPopover: { type: Boolean, default: true }
   },
   data() {

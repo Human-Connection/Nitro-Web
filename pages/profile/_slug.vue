@@ -13,7 +13,7 @@
         <ds-card style="position: relative; height: auto;">
           <ds-avatar
             :image="user.avatar"
-            :name="user.name || 'Anonymus'"
+            :name="user.name"
             class="profile-avatar"
             size="120px"
           />
@@ -31,8 +31,15 @@
               align="center"
               no-margin
             >
-              {{ user.name }}
+              {{ user.name || 'Anonymus' }}
             </ds-heading>
+            <ds-text
+              size="small"
+              color="softer"
+              style="text-align: center"
+            >
+              @{{ user.slug }}
+            </ds-text>
             <ds-text
               v-if="user.location"
               align="center"

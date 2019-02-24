@@ -28,7 +28,7 @@
       <no-ssr>
         <hc-author
           :post="post"
-          :trunc="35"
+          :trunc="26"
           :show-author-popover="showAuthorPopover"
         />
       </no-ssr>
@@ -88,7 +88,7 @@ export default {
       // remove all links from excerpt to prevent issues with the serounding link
       let excerpt = this.post.contentExcerpt.replace(/<a.*>(.+)<\/a>/gim, '')
       // do not display content that is only linebreaks
-      if (excerpt.replace(/<br>/gim, '').trim() === '') {
+      if (excerpt.replace(/(<br ?\/?>\s*){2,}/gim, '').trim() === '') {
         excerpt = ''
       }
 

@@ -95,6 +95,7 @@ export default {
                 title
                 slug
                 contentExcerpt
+                createdAt
                 shoutedCount
                 commentsCount
                 categories {
