@@ -52,7 +52,7 @@
     "nuxt": "~2.4.5",
     "nuxt-env": "~0.1.0",
     "portal-vue": "~1.5.1",
-    "@human-connection/styleguide": "~0.5.0",
+    "@human-connection/styleguide": "~0.5.2",
     "v-tooltip": "~2.0.0-rc.33",
     "vue-count-to": "~1.0.13",
     "string-hash": "^1.1.3",
