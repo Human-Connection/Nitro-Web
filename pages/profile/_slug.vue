@@ -129,13 +129,13 @@
           <template v-if="user.following && user.following.length">
             <ds-space
               v-for="follow in uniq(user.following)"
-              :key="follow.id"
+              :key="follow.User.id"
               margin="x-small"
             >
               <!-- TODO: find better solution for rendering errors -->
               <no-ssr>
                 <hc-related-user
-                  :post="follow"
+                  :post="follow.User"
                   :trunc="15"
                 />
               </no-ssr>
@@ -174,13 +174,13 @@
           <template v-if="user.followedBy && user.followedBy.length">
             <ds-space
               v-for="follow in uniq(user.followedBy)"
-              :key="follow.id"
+              :key="follow.User.id"
               margin="x-small"
             >
               <!-- TODO: find better solution for rendering errors -->
               <no-ssr>
                 <hc-related-user
-                  :post="follow"
+                  :post="follow.User"
                   :trunc="15"
                 />
               </no-ssr>
