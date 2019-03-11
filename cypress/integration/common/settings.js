@@ -61,3 +61,26 @@ Then(
   'I can see my new name {string} when I click on my profile picture in the top right',
   name => matchNameInUserMenu(name)
 )
+
+When('I click on the {string} link', link => {
+  cy.get('a')
+    .contains(link)
+    .click()
+})
+
+Then('I should be on the {string} page', page => {
+  cy.location()
+    .should(loc => {
+      expect(loc.pathname).to.eq(page)
+    })
+    .get('h3')
+    .should('contain', 'My social media accounts')
+})
+
+Then('I should be able to add a social media link', () => {
+  cy.get("input[name='social-media']")
+    .type('https://freeradical.zone/@mattwr18')
+    .get('button')
+    .contains('Add Account')
+    .click()
+})

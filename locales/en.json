@@ -58,6 +58,9 @@
     },
     "languages": {
       "name": "Languages"
+    },
+    "social-media": {
+      "name": "My social media accounts"
     }
   },
   "admin": {
