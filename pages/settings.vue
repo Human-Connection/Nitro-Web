@@ -40,6 +40,10 @@ export default {
           path: `/settings/invites`
         },
         {
+          name: this.$t('settings.blacklist.name'),
+          path: `/settings/blacklist`
+        },
+        {
           name: this.$t('settings.download.name'),
           path: `/settings/data-download`
         },

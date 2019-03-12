@@ -5,12 +5,14 @@
       :fields="fields"
       condensed
     >
+      <!-- eslint-disable vue/no-unused-vars -->
       <template
         slot="icon"
-        slot-scope="scope"
+        slot-scope="{ row }"
       >
-        <ds-icon :name="scope.row.icon" />
+        <ds-icon :name="row.icon" /> {{ row.icon }}
       </template>
+      <!-- eslint-enable vue/no-unused-vars -->
     </ds-table>
   </ds-card>
 </template>

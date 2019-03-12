@@ -1,13 +1,14 @@
 <template>
   <!-- eslint-disable vue/no-unused-vars -->
-  <ds-card :header="$t('admin.users.name')">
+  <ds-card :header="$t('settings.blacklist.name')">
     <ds-space margin="small">
       <ds-table
+        v-if="blacklisted"
         :fields="{
           name: 'Name',
           actions: { label: '', align: 'right' }
         }"
-        :data="users"
+        :data="blacklisted"
       >
         <template
           slot="name"
@@ -15,6 +16,7 @@
         >
           <hc-user
             :trunc="35"
+            :show-author-popover="false"
             :post="{}"
             :user="row"
           />
@@ -24,16 +26,7 @@
           slot-scope="{row, index, col}"
         >
           <ds-button size="small">
-            Rechte
-          </ds-button>
-          <ds-button size="small">
-            Blockieren
-          </ds-button>
-          <ds-button
-            size="small"
-            danger
-          >
-            Löschen
+            {{ $t('settings.blacklist.unblock') }}
           </ds-button>
         </template>
       </ds-table>
@@ -50,32 +43,38 @@ export default {
     HcUser
   },
   computed: {
-    users() {
-      return this.User ? this.User : []
+    blacklisted() {
+      return this.User ? this.User[0].blacklisted : []
     }
   },
   apollo: {
     User: {
       query: gql(`
-        query {
-          User(first: 10, offset: 0, orderBy: createdAt_asc) {
-            id
-            avatar
-            slug
-            name
-            contributionsCount
-            shoutedCount
-            commentsCount
-            followedByCount
-            createdAt
-            badges {
+        query User($myId: ID!) {
+          User(id: $myId) {
+            blacklisted {
               id
-              key
-              icon
+              avatar
+              slug
+              name
+              contributionsCount
+              shoutedCount
+              commentsCount
+              followedByCount
+              badges {
+                id
+                key
+                icon
+              }
             }
           }
         }
       `),
+      variables() {
+        return {
+          myId: this.$store.getters['auth/user'].id
+        }
+      },
       fetchPolicy: 'cache-and-network'
     }
   }

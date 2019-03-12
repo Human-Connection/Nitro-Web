@@ -31,6 +31,10 @@
     "invites": {
       "name": "Einladungen"
     },
+    "blacklist": {
+      "name": "Blacklist",
+      "unblock": "Entblocken"
+    },
     "download": {
       "name": "Daten herunterladen"
     },
