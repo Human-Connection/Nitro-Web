@@ -1,13 +1,4 @@
 {
-  "actions": {
-    "loading": "lade",
-    "loadMore": "mehr laden",
-    "create": "Erstellen",
-    "save": "Speichern",
-    "edit": "Bearbeiten",
-    "delete": "Löschen",
-    "cancel": "Abbrechen"
-  },
   "login": {
     "copy": "Wenn Du bereits ein Konto bei Human Connection hast, melde Dich bitte hier an.",
     "login": "Einloggen",
@@ -16,13 +7,6 @@
     "password": "Dein Passwort",
     "moreInfo": "Was ist Human Connection?",
     "hello": "Hallo"
-  },
-  "followButton": {
-    "follow": "Folgen",
-    "following": "Folge Ich"
-  },
-  "shoutButton": {
-    "shouted": "empfohlen"
   },
   "profile": {
     "name": "Mein Profil",
@@ -100,39 +84,6 @@
       "name": "Einstellungen"
     }
   },
-  "moderation": {
-    "name": "Moderation",
-    "reports": {
-      "empty": "Glückwunsch, es gibt nichts zu moderieren.",
-      "name": "Meldungen",
-      "reporter": "gemeldet von"
-    }
-  },
-  "contribution": {
-    "edit": "Beitrag bearbeiten",
-    "delete": "Beitrag löschen"
-  },
-  "comment": {
-    "edit": "Kommentar bearbeiten",
-    "delete": "Kommentar löschen"
-  },
-  "disable": {
-    "user": {
-      "title": "Nutzer sperren",
-      "type": "Nutzer",
-      "message": "Bist du sicher, dass du den Nutzer \"<b>{name}</b>\" deaktivieren möchtest?"
-    },
-    "contribution": {
-      "title": "Beitrag sperren",
-      "type": "Beitrag",
-      "message": "Bist du sicher, dass du den Beitrag \"<b>{name}</b>\" deaktivieren möchtest?"
-    },
-    "comment": {
-      "title": "Kommentar sperren",
-      "type": "Kommentar",
-      "message": "Bist du sicher, dass du den Kommentar \"<b>{name}</b>\" deaktivieren möchtest?"
-    }
-  },
   "post": {
     "name": "Beitrag",
     "moreInfo": {
@@ -142,33 +93,13 @@
       "name": "Aktiv werden"
     }
   },
-  "report": {
-    "submit": "Meldung senden",
-    "cancel": "Abbrechen",
-    "user": {
-      "title": "Nutzer melden",
-      "type": "Nutzer",
-      "message": "Bist du sicher, dass du den Nutzer \"<b>{name}</b>\" melden möchtest?"
-    },
-    "contribution": {
-      "title": "Beitrag melden",
-      "type": "Beitrag",
-      "message": "Bist du sicher, dass du den Beitrag \"<b>{name}</b>\" melden möchtest?"
-    },
-    "comment": {
-      "title": "Kommentar melden",
-      "type": "Kommentar",
-      "message": "Bist du sicher, dass du den Kommentar von \"<b>{name}</b>\" melden möchtest?"
-    }
-  },
   "quotes": {
     "african": {
-      "quote": "Viele kleine Leute, an vielen kleinen Orten, die viele kleine Dinge tun, werden das Antlitz dieser Welt verändern.",
+      "quote": "Viele kleine Leute an vielen kleinen Orten, die viele kleine Dinge tun, werden das Antlitz dieser Welt verändern.",
       "author": "Afrikanisches Sprichwort"
     }
   },
   "common": {
-    "reportContent": "Melden",
     "post": "Beitrag ::: Beiträge",
     "comment": "Kommentar ::: Kommentare",
     "letsTalk": "Miteinander reden",
@@ -183,6 +114,75 @@
     "tag": "Tag ::: Tags",
     "name": "Name",
     "loadMore": "mehr laden",
-    "loading": "wird geladen"
+    "loading": "wird geladen",
+    "reportContent": "Melden"
+  },
+  "actions": {
+    "loading": "lade",
+    "loadMore": "mehr laden",
+    "create": "Erstellen",
+    "save": "Speichern",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "cancel": "Abbrechen"
+  },
+  "moderation": {
+    "name": "Moderation",
+    "reports": {
+      "empty": "Glückwunsch, es gibt nichts zu moderieren.",
+      "name": "Meldungen",
+      "reporter": "gemeldet von"
+    }
+  },
+  "disable": {
+    "user": {
+      "title": "Nutzer sperren",
+      "type": "Nutzer",
+      "message": "Bist du sicher, dass du den Nutzer \"<b>{name}<\/b>\" deaktivieren möchtest?"
+    },
+    "contribution": {
+      "title": "Beitrag sperren",
+      "type": "Beitrag",
+      "message": "Bist du sicher, dass du den Beitrag \"<b>{name}<\/b>\" deaktivieren möchtest?"
+    },
+    "comment": {
+      "title": "Kommentar sperren",
+      "type": "Kommentar",
+      "message": "Bist du sicher, dass du den Kommentar \"<b>{name}<\/b>\" deaktivieren möchtest?"
+    }
+  },
+  "report": {
+    "submit": "Meldung senden",
+    "cancel": "Abbrechen",
+    "user": {
+      "title": "Nutzer melden",
+      "type": "Nutzer",
+      "message": "Bist du sicher, dass du den Nutzer \"<b>{name}<\/b>\" melden möchtest?"
+    },
+    "contribution": {
+      "title": "Beitrag melden",
+      "type": "Beitrag",
+      "message": "Bist du sicher, dass du den Beitrag \"<b>{name}<\/b>\" melden möchtest?"
+    },
+    "comment": {
+      "title": "Kommentar melden",
+      "type": "Kommentar",
+      "message": "Bist du sicher, dass du den Kommentar von \"<b>{name}<\/b>\" melden möchtest?"
+    }
+  },
+  "contribution": {
+    "edit": "Beitrag bearbeiten",
+    "delete": "Beitrag löschen"
+  },
+  "comment": {
+    "edit": "Kommentar bearbeiten",
+    "delete": "Kommentar löschen"
+  },
+  "followButton": {
+    "follow": "Folgen",
+    "following": "Folge Ich"
+  },
+  "shoutButton": {
+    "shouted": "empfohlen"
   }
 }
