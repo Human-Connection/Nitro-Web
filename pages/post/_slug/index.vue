@@ -12,6 +12,7 @@
         context="contribution"
         :item-id="post.id"
         :name="post.title"
+        :is-owner="isAuthor(post.author.id)"
       />
     </no-ssr>
     <ds-space margin-bottom="small" />
@@ -27,7 +28,9 @@
     <ds-space margin="xx-large" />
     <hc-shout-button
       v-if="post.author"
+      :disabled="isAuthor(post.author.id)"
       :count="post.shoutedCount"
+      :is-shouted="post.shoutedByCurrentUser"
       :post-id="post.id"
     />
     <!-- Categories -->
@@ -97,6 +100,7 @@
               style="float-right"
               :item-id="comment.id"
               :name="comment.author.name"
+              :is-owner="isAuthor(comment.author.id)"
             />
           </no-ssr>
           <!-- eslint-disable vue/no-v-html -->
@@ -160,6 +164,11 @@ export default {
       this.title = this.post.title
     }
   },
+  methods: {
+    isAuthor(id) {
+      return this.$store.getters['auth/user'].id === id
+    }
+  },
   apollo: {
     Post: {
       query() {
@@ -181,9 +190,10 @@ export default {
                 contributionsCount
                 commentsCount
                 followedByCount
+                followedByCurrentUser
                 location {
-                    name: name${this.$i18n.locale().toUpperCase()}
-                  }
+                  name: name${this.$i18n.locale().toUpperCase()}
+                }
                 badges {
                   id
                   key
@@ -208,6 +218,7 @@ export default {
                   contributionsCount
                   commentsCount
                   followedByCount
+                  followedByCurrentUser
                   location {
                     name: name${this.$i18n.locale().toUpperCase()}
                   }
@@ -224,6 +235,7 @@ export default {
                 icon
               }
               shoutedCount
+              shoutedByCurrentUser
             }
           }
         `)
