@@ -24,41 +24,51 @@ export default app => {
         commentsCount
         followingCount
         following(first: 7) {
-          id
-          name
-          slug
-          avatar
-          followedByCount
-          followedByCurrentUser
-          contributionsCount
-          commentsCount
-          badges {
-            id
-            key
-            icon
+          createdAt: {
+            formatted
           }
-          location {
-            name: name${lang}
+          User {
+            id
+            name
+            slug
+            avatar
+            followedByCount
+            followedByCurrentUser
+            contributionsCount
+            commentsCount
+            badges {
+              id
+              key
+              icon
+            }
+            location {
+              name: name${lang}
+            }
           }
         }
         followedByCount
         followedByCurrentUser
         followedBy(first: 7)  {
-          id
-          name
-          slug
-          avatar
-          followedByCount
-          followedByCurrentUser
-          contributionsCount
-          commentsCount
-          badges {
-            id
-            key
-            icon
+          createdAt: {
+            formatted
           }
-          location {
-            name: name${lang}
+          User {
+            id
+            name
+            slug
+            avatar
+            followedByCount
+            followedByCurrentUser
+            contributionsCount
+            commentsCount
+            badges {
+              id
+              key
+              icon
+            }
+            location {
+              name: name${lang}
+            }
           }
         }
         contributionsCount
