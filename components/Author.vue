@@ -17,10 +17,11 @@
       >
         <div style="display: inline-block; float: left; margin-right: 4px;  height: 100%; vertical-align: middle;">
           <ds-avatar
+            style="display: inline-block; vertical-align: middle;"
+            size="small"
             :image="author.avatar"
             :name="author.name"
-            style="display: inline-block; vertical-align: middle;"
-            size="32px"
+            :is-online="isOnline"
           />
         </div>
         <div style="display: inline-block; height: 100%; vertical-align: middle;">
@@ -128,6 +129,7 @@
 import HcFollowButton from '~/components/FollowButton.vue'
 import HcBadges from '~/components/Badges.vue'
 import Dropdown from '~/components/Dropdown'
+import differenceInMinutes from 'date-fns/differenceInMinutes'
 
 export default {
   name: 'HcAuthor',
@@ -155,6 +157,14 @@ export default {
         : {
             name: 'Anonymus'
           }
+    },
+    isOnline() {
+      if (this.author && this.author.lastActiveAt) {
+        // eslint-disable-next-line prettier/prettier
+        return differenceInMinutes(new Date(), new Date(this.author.lastActiveAt)) <= 15
+      } else {
+        return false
+      }
     },
     hasAuthor() {
       return Boolean(this.post && this.post.author)

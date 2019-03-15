@@ -12,10 +12,11 @@
       <ds-flex-item :width="{ base: '100%', sm: 2, md: 2, lg: 1 }">
         <ds-card style="position: relative; height: auto;">
           <ds-avatar
+            class="profile-avatar"
+            size="x-large"
             :image="user.avatar"
             :name="user.name || 'Anonymus'"
-            class="profile-avatar"
-            size="120px"
+            :is-online="isOnline"
           />
           <no-ssr>
             <content-menu
@@ -307,6 +308,7 @@ import HcBadges from '~/components/Badges.vue'
 import HcLoadMore from '~/components/LoadMore.vue'
 import HcEmpty from '~/components/Empty.vue'
 import ContentMenu from '~/components/ContentMenu'
+import differenceInMinutes from 'date-fns/differenceInMinutes'
 
 export default {
   components: {
@@ -356,6 +358,14 @@ export default {
         return []
       }
       return this.uniq(this.user.contributions.filter(post => !post.deleted))
+    },
+    isOnline() {
+      if (this.User && this.User.lastActiveAt) {
+        // eslint-disable-next-line prettier/prettier
+        return differenceInMinutes(new Date(), new Date(this.User.lastActiveAt)) <= 15
+      } else {
+        return false
+      }
     }
   },
   watch: {

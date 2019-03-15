@@ -191,6 +191,7 @@ export default {
                 commentsCount
                 followedByCount
                 followedByCurrentUser
+                lastActiveAt
                 location {
                   name: name${this.$i18n.locale().toUpperCase()}
                 }
@@ -219,6 +220,7 @@ export default {
                   commentsCount
                   followedByCount
                   followedByCurrentUser
+                  lastActiveAt
                   location {
                     name: name${this.$i18n.locale().toUpperCase()}
                   }

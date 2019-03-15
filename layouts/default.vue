@@ -33,7 +33,7 @@
                     <ds-avatar
                       :image="user.avatar"
                       :name="user.name"
-                      size="42"
+                      size="base"
                     />
                     <ds-icon
                       size="xx-small"

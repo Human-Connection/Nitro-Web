@@ -81,6 +81,7 @@ export default app => {
             id
             avatar
             name
+            lastActiveAt
             location {
               name: name${lang}
             }

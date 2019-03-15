@@ -21,6 +21,7 @@ export default app => {
           author {
             name
             slug
+            lastActiveAt
           }
           post {
             title
@@ -33,6 +34,7 @@ export default app => {
           author {
             name
             slug
+            lastActiveAt
           }
         }
       }
