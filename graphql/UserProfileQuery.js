@@ -10,6 +10,7 @@ export default app => {
         avatar
         about
         locationName
+        lastActiveAt
         location {
           name: name${lang}
         }
@@ -30,6 +31,7 @@ export default app => {
           avatar
           followedByCount
           followedByCurrentUser
+          lastActiveAt
           contributionsCount
           commentsCount
           badges {
@@ -50,6 +52,7 @@ export default app => {
           avatar
           followedByCount
           followedByCurrentUser
+          lastActiveAt
           contributionsCount
           commentsCount
           badges {

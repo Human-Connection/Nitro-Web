@@ -360,9 +360,9 @@ export default {
       return this.uniq(this.user.contributions.filter(post => !post.deleted))
     },
     isOnline() {
-      if (this.User && this.User.lastActiveAt) {
+      if (this.user && this.user.lastActiveAt) {
         // eslint-disable-next-line prettier/prettier
-        return differenceInMinutes(new Date(), new Date(this.User.lastActiveAt)) <= 15
+        return differenceInMinutes(new Date(), new Date(this.user.lastActiveAt)) <= 15
       } else {
         return false
       }
