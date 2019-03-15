@@ -21,7 +21,7 @@
             size="small"
             :image="author.avatar"
             :name="author.name"
-            :is-online="isOnline"
+            :online="isOnline"
           />
         </div>
         <div style="display: inline-block; height: 100%; vertical-align: middle;">

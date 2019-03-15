@@ -16,7 +16,7 @@
             size="x-large"
             :image="user.avatar"
             :name="user.name || 'Anonymus'"
-            :is-online="isOnline"
+            :online="isOnline"
           />
           <no-ssr>
             <content-menu
