@@ -110,6 +110,7 @@ export default {
                   contributionsCount
                   followedByCount
                   followedByCurrentUser
+                  lastActiveAt
                   commentsCount
                   location {
                     name: name${this.$i18n.locale().toUpperCase()}
