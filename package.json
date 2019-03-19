@@ -6,7 +6,6 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
-    "dev:styleguide": "cross-env STYLEGUIDE_DEV=true yarn dev",
     "build": "nuxt build",
     "start": "cross-env node server/index.js",
     "generate": "nuxt generate",
