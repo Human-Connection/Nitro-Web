@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: nitro-web
   namespace: human-connection
+  commit: <COMMIT>
 spec:
   replicas: 2
   minReadySeconds: 15
@@ -18,21 +19,11 @@ spec:
     spec:
       containers:
       - name: web
-        env:
-        - name: COMMIT
-          value: <WEBAPP_COMMIT>
+        envFrom:
+        - configMapRef:
+          name: configmap
         - name: HOST
           value: 0.0.0.0
-        - name: BACKEND_URL
-          valueFrom:
-            configMapKeyRef:
-              name: configmap
-              key: GRAPHQL_URI
-        - name: MAPBOX_TOKEN
-          valueFrom:
-            configMapKeyRef:
-              name: configmap
-              key: MAPBOX_TOKEN
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
