@@ -85,4 +85,6 @@ Then('I should be able to add a social media link', () => {
     .click()
     .get('.iziToast-message')
     .should('contain', 'Updated user')
+    .get('a')
+    .contains("src='https://freeradical.zone/@mattwr18'")
 })

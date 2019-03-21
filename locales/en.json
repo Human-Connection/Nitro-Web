@@ -50,7 +50,8 @@
     },
     "social-media": {
       "name": "My social media",
-      "submit": "Add social media"
+      "submit": "Add social media",
+      "success": "Updated user"
     }
   },
   "admin": {
