@@ -92,11 +92,13 @@ export default {
       query() {
         return gql(`
           query Post($first: Int, $offset: Int) {
-            Post(first: $first, offset: $offset, orderBy: createdAt_desc) {
+            Post(first: $first, offset: $offset) {
               id
               title
               contentExcerpt
               createdAt
+              disabled
+              deleted
               slug
               image
               author {
@@ -104,6 +106,8 @@ export default {
                 avatar
                 slug
                 name
+                disabled
+                deleted
                 contributionsCount
                 shoutedCount
                 commentsCount
