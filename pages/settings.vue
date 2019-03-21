@@ -57,7 +57,7 @@ export default {
         },
         {
           name: this.$t('settings.social-media.name'),
-          path: `/settings/my-social-media-accounts`
+          path: `/settings/my-social-media`
         }
       ]
     }
