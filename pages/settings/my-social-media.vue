@@ -5,15 +5,14 @@
         v-model="value"
         placeholder="Add social media url"
         name="social-media"
+        :schema="{type: 'url'}"
       />
     </div>
-    <div>
-      <ds-button
-        @click="handleAddSocialMediaAccount"
-      >
-        Add Account
-      </ds-button>
-    </div>
+    <ds-space margin-top="base">
+      <div>
+        <ds-button primary @click="handleAddSocialMedia">{{ $t('settings.social-media.submit') }}</ds-button>
+      </div>
+    </ds-space>
   </ds-card>
 </template>
 <script>
@@ -26,11 +25,11 @@ export default {
     }
   },
   methods: {
-    handleAddSocialMediaAccount() {
+    handleAddSocialMedia() {
       this.$apollo.mutate({
         mutation: gql`
           mutation($url: String!) {
-            addSocialMediaAccount(url: $url) {
+            addSocialMedia(url: $url) {
               id
             }
           }

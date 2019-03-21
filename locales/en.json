@@ -44,7 +44,8 @@
       "name": "Languages"
     },
     "social-media": {
-      "name": "My social media accounts"
+      "name": "My social media",
+      "submit": "Add social media"
     }
   },
   "admin": {

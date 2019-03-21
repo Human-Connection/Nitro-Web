@@ -74,13 +74,15 @@ Then('I should be on the {string} page', page => {
       expect(loc.pathname).to.eq(page)
     })
     .get('h3')
-    .should('contain', 'My social media accounts')
+    .should('contain', 'My social media')
 })
 
 Then('I should be able to add a social media link', () => {
   cy.get("input[name='social-media']")
     .type('https://freeradical.zone/@mattwr18')
     .get('button')
-    .contains('Add Account')
+    .contains('Add social media')
     .click()
+    .get('.iziToast-message')
+    .should('contain', 'Updated user')
 })
